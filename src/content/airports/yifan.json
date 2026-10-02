@@ -1,0 +1,112 @@
+{
+  "id": "yifan",
+  "name": "一翻云",
+  "slug": "yifan",
+  "intro": "官网宣称提供 IEPL 及企业级专线流量，有自研客户端，并提供不限时流量包。",
+  "fit": "确定长期使用、想要年付折扣的用户",
+  "summary": "轻享版 20 元/月 150GB，官网明确标注年付价（168 元/年起），另有不限时流量包和自研客户端。官网宣称 IEPL 专线。",
+  "website": "https://wzjc.1flyunaff.cc/#/?code=0tH3Mmch",
+  "promoLink": "https://wzjc.1flyunaff.cc/#/?code=0tH3Mmch",
+  "promoCode": "1FLYYUN",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "轻享版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 20,
+      "yearlyPrice": 168,
+      "traffic": 150,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "舒享版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 35,
+      "yearlyPrice": 298,
+      "traffic": 350,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "尊享版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 55,
+      "yearlyPrice": 498,
+      "traffic": 600,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极致版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 95,
+      "yearlyPrice": 888,
+      "traffic": 1200,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "98¥ · 年付小包",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 98,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "轻享版 · 不限时包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 100,
+      "yearlyPrice": null,
+      "traffic": 100,
+      "type": "one_time"
+    },
+    {
+      "name": "舒享版 · 不限时包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 200,
+      "yearlyPrice": null,
+      "traffic": 250,
+      "type": "one_time"
+    },
+    {
+      "name": "尊享版 · 不限时包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 400,
+      "yearlyPrice": null,
+      "traffic": 500,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "明确标注长期季付/年付折扣",
+    "自研客户端"
+  ],
+  "cons": [],
+  "reviewSlug": "yifan",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/yifanyun-logo.png"
+  }
+}

@@ -1,0 +1,68 @@
+---
+import { siteConfig } from '../config';
+---
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-links">
+      <a href="/">机场推荐</a>
+      <a href="/compare/">机场对比表</a>
+      <a href="/reviews/">机场评测</a>
+      <a href="/coupons/">机场优惠码</a>
+      <a href="/tutorials/">使用教程</a>
+      <a href="/about/">关于本站</a>
+      <a href="/methodology/">测试方法</a>
+      <a href="/disclosure/">利益披露</a>
+      <a href="/links/">友情链接</a>
+      <a href={siteConfig.telegramChannel} target="_blank" rel="noopener">Sogo 云 Telegram 频道</a>
+      <a href={`mailto:${siteConfig.email}`}>联系我们</a>
+      
+    </div>
+    <div class="footer-copy">
+      <p>&copy; {new Date().getFullYear()} 机场 Pro. 保留所有权利。</p>
+      <p class="disclaimer">
+        本站内容仅供技术研究与参考，部分链接可能包含推广（<a href="/disclosure/">了解详情</a>）。本站不提供服务，请遵守当地法律法规。
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
+    padding: 3rem 0;
+    margin-top: 4rem;
+  }
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .footer-links a {
+    color: var(--color-text-light);
+  }
+  .footer-links a:hover {
+    color: var(--color-primary);
+  }
+  .footer-copy {
+    color: var(--color-text-lighter);
+    font-size: 0.875rem;
+  }
+  .disclaimer {
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+    font-size: 0.75rem;
+  }
+  .disclaimer a {
+    color: var(--color-text-lighter);
+    text-decoration: underline;
+  }
+</style>

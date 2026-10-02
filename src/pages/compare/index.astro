@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getAirports } from '../../utils/data';
+
+const airports = await getAirports();
+---
+
+<Layout 
+  title="机场综合对比表2026：9家翻墙机场价格、流量与套餐对比 | 机场 Pro" 
+  description="一张表对比 9 家翻墙机场的月付起价、年付价格、月流量、不限时套餐与优惠码，支持按价格和流量排序筛选，每月核对官网价格。"
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '机场综合对比表' }]} />
+  
+  <div class="prose" style="max-width: 100%;">
+    <h1>机场综合对比表</h1>
+    <p>在这个页面，你可以查看本站收录的所有机场数据的详细对比。默认提供基础的价格、流量和设备数比较。点击表头即可对对应列进行排序（降序或升序）。</p>
+    <p><strong>注意：</strong>如果某项数据（如流量、设备数）显示为“未知”，则表示官网没有明确标注或我们暂时无法确认。在排序时，这些“未知”项会自动排在最后，避免干扰你寻找明确的数据。</p>
+  </div>
+  
+  <ComparisonTable airports={airports} />
+
+</Layout>

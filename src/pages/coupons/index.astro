@@ -1,0 +1,146 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BrandLogo from '../../components/BrandLogo.astro';
+import FaqList from '../../components/FaqList.astro';
+import { getAirports, getPlanStats } from '../../utils/data';
+import { siteConfig } from '../../config';
+import { faqPage, graph, type Faq } from '../../utils/schema';
+
+const airports = (await getAirports()).filter(a => a.promoCode);
+const year = siteConfig.lastUpdated.slice(0, 4);
+const [, month] = siteConfig.lastUpdated.split('-');
+
+const faqs: Faq[] = [
+  { q: '机场优惠码怎么用？', a: '在机场官网注册登录后选择套餐，进入结算页面，在“优惠码 / 优惠券”输入框中填入优惠码并点击验证，价格会自动更新，然后再付款。' },
+  { q: '优惠码能叠加使用吗？', a: '一般每笔订单只能使用一个优惠码，具体以结算页提示为准。' },
+  { q: '为什么提示优惠码无效？', a: '常见原因：优惠码已过期或达到使用次数上限、不适用于所选套餐（例如只限月付）、输入时多了空格或大小写错误。本站每月核对一次，如遇失效可以直接按原价购买，或联系机场客服确认。' },
+  { q: '用优惠码购买会影响套餐内容吗？', a: '不会。优惠码只影响价格，套餐流量、节点和服务与原价购买相同。' },
+];
+const schema = graph(faqPage(faqs));
+---
+
+<Layout
+  title={`机场优惠码${year}：${airports.length}家机场最新优惠码与使用方法（${Number(month)}月更新）| 机场 Pro`}
+  description={`${year}年${Number(month)}月机场优惠码汇总：整理 Sogo 云、飞猫云、光速云、星岛梦等 ${airports.length} 家机场的优惠码、月付起价与使用方法，每月核对一次。`}
+  schema={schema}
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '机场优惠码' }]} />
+
+  <div class="prose">
+    <h1>{year}年机场优惠码汇总</h1>
+    <p class="meta-line">最后核对：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time> · 优惠幅度与适用套餐以结算页为准</p>
+    <p>下面是本站收录机场的优惠码，按编辑推荐顺序排列。点击“复制”后，在机场结算页的“优惠码”输入框中粘贴即可。部分注册链接含推广参数，详见 <a href="/disclosure/">利益披露</a>。Sogo 云的优惠活动会发布在 <a href={siteConfig.telegramChannel} target="_blank" rel="noopener">Sogo 云 Telegram 频道</a>。</p>
+  </div>
+
+  <ul class="coupon-list">
+    {airports.map(a => {
+      const s = getPlanStats(a);
+      return (
+        <li class="coupon-card">
+          <div class="coupon-brand">
+            <BrandLogo brandName={a.name} squareSrc={a.logo?.square} width={40} height={40} hideAlt={true} />
+            <div>
+              <h2><a href={`/reviews/${a.reviewSlug}/`}>{a.name}优惠码</a></h2>
+              <p class="coupon-price">{s.minMonthly !== null ? `月付 ¥${s.minMonthly} 起（${s.entryTraffic}GB）` : ''}{s.minYearlySmall ? ` · 年付小包 ¥${s.minYearlySmall.price}/年` : ''}</p>
+            </div>
+          </div>
+          <div class="coupon-code-row">
+            <code class="coupon-code">{a.promoCode}</code>
+            <button type="button" class="btn btn-secondary copy-btn" data-copy={a.promoCode}>复制</button>
+            {a.promoLink && <a href={a.promoLink} target="_blank" rel="sponsored noopener noreferrer" class="btn btn-primary">前往官网</a>}
+          </div>
+          {a.promoCodeNote && <p class="coupon-note">{a.promoCodeNote}</p>}
+        </li>
+      );
+    })}
+  </ul>
+
+  <div class="prose">
+    <h2>优惠码使用步骤</h2>
+    <ol>
+      <li>点击“前往官网”，注册并登录机场账户；</li>
+      <li>在“购买订阅 / 商店”中选择套餐和付款周期；</li>
+      <li>在结算页找到“优惠码”输入框，粘贴优惠码并点击“验证 / 使用”；</li>
+      <li>确认价格已更新后再付款；</li>
+      <li>付款完成后复制订阅链接，导入客户端，参考 <a href="/tutorials/clash-verge-rev-guide/">Clash Verge Rev 教程</a> 或 <a href="/tutorials/shadowrocket-guide/">小火箭教程</a>。</li>
+    </ol>
+
+    <h2>省钱建议</h2>
+    <ul>
+      <li>第一次购买先用优惠码买<strong>月付</strong>试用，确认稳定再考虑长周期，见 <a href="/tutorials/monthly-vs-yearly/">月付还是年付</a>；</li>
+      <li>用量少的话，年付小包或 <a href="/tutorials/one-time-plan-explain/">不限时流量包</a> 往往比优惠码省得更多；</li>
+      <li>对比各家价格，请看 <a href="/compare/">机场综合对比表</a>。</li>
+    </ul>
+
+    <FaqList faqs={faqs} />
+    <p>其他推荐：<a href="/">机场推荐总榜</a> · <a href="/cheap/">便宜机场推荐</a> · <a href="/value/">性价比机场推荐</a></p>
+  </div>
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.copy;
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.textContent = '已复制';
+      } catch {
+        btn.textContent = code;
+      }
+      setTimeout(() => { btn.textContent = '复制'; }, 2000);
+    });
+  });
+</script>
+
+<style>
+  .coupon-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem auto;
+    max-width: var(--max-width-prose);
+    display: grid;
+    gap: 1rem;
+  }
+  .coupon-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+  }
+  .coupon-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .coupon-brand h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+  .coupon-brand h2 a { color: var(--color-text); }
+  .coupon-price {
+    margin: 0.125rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+  .coupon-code-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .coupon-code {
+    font-size: 1.125rem;
+    padding: 0.375rem 0.75rem;
+    border: 2px dashed var(--color-primary);
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
+    background: var(--color-bg-alt);
+  }
+  .coupon-note {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-lighter);
+  }
+</style>

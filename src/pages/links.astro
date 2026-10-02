@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { friendLinks } from '../data/friend-links';
+import { siteConfig } from '../config';
+---
+
+<Layout
+  title="友情链接：机场推荐与科学上网相关网站 | 机场 Pro"
+  description="机场 Pro 的友情链接：收录机场评测、机场套餐数据库、客户端教程等相关网站，方便你从多个来源对比机场价格与评测。"
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '友情链接' }]} />
+
+  <div class="prose">
+    <h1>友情链接</h1>
+    <p>以下是与机场 Pro 内容相关的网站，提供机场评测、套餐数据和使用教程。多参考几个来源，能更全面地判断一家机场是否适合你。</p>
+
+    <ul class="link-list">
+      {friendLinks.map(l => (
+        <li>
+          <a href={l.url} target="_blank" rel="noopener">{l.name}</a>
+          <span class="domain">{new URL(l.url).hostname}</span>
+          <p>{l.description}</p>
+        </li>
+      ))}
+    </ul>
+
+    <h2>申请友链</h2>
+    <p>欢迎内容相关、正常更新的网站交换友情链接。请发送邮件至 <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>，注明网站名称、网址和简介，并先在贵站添加本站链接：<code>机场 Pro — https://jichangpro.blog/</code>。</p>
+  </div>
+</Layout>
+
+<style>
+  .link-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .link-list li {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+  }
+  .link-list a {
+    font-weight: 600;
+    font-size: 1.0625rem;
+  }
+  .domain {
+    margin-left: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-lighter);
+  }
+  .link-list p {
+    margin: 0.375rem 0 0 !important;
+    color: var(--color-text-light);
+    font-size: 0.9375rem;
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getPublishedReviews } from '../../utils/data';
+
+const reviews = await getPublishedReviews();
+---
+
+<Layout 
+  title="机场评测大全2026：9家翻墙机场套餐、线路与优缺点 | 机场 Pro" 
+  description="收录 Sogo 云、飞猫云、光速云、星岛梦等 9 家机场的评测：套餐价格、每 GB 成本、线路宣称、优缺点与选购建议，持续补充晚高峰实测。"
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '机场评测' }]} />
+  
+  <div class="prose">
+    <h1>机场评测</h1>
+    <p>这里汇总了本站收录机场的评测文章。每篇评测都包含完整套餐价格与每 GB 成本、官网线路宣称、按用量的选购建议、同价位对比和优缺点。晚高峰测速与流媒体解锁实测正在逐步补充，完成后会在文章中注明测试日期。想直接看结论请前往 <a href="/">2026 机场推荐榜单</a>。</p>
+  </div>
+  
+  <div class="reviews-list">
+    {reviews.map(review => (
+      <div class="review-card">
+        <h2><a href={`/reviews/${review.id}/`}>{review.data.title}</a></h2>
+        <p>{review.data.description}</p>
+        <div class="meta">更新日期: {review.data.updatedAt.toISOString().split('T')[0]}</div>
+      </div>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .reviews-list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .review-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+  .review-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+  .review-card p {
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+  }
+  .meta {
+    font-size: 0.875rem;
+    color: var(--color-text-lighter);
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getAirports } from '../../utils/data';
+import { siteConfig } from '../../config';
+import FaqList from '../../components/FaqList.astro';
+import { faqPage, graph, type Faq } from '../../utils/schema';
+
+const allAirports = await getAirports();
+const stableAirports = allAirports.filter(a => a.tags.includes('稳定') || a.tags.includes('专线'));
+const year = siteConfig.lastUpdated.slice(0, 4);
+
+const faqs: Faq[] = [
+  { q: '什么样的机场算稳定？', a: '晚高峰（20:00–23:00）延迟波动小、很少大面积超时、敏感时期仍能正常使用的机场。通常采用 IPLC/IEPL 专线或优质中转线路。' },
+  { q: '专线机场一定稳定吗？', a: '不一定。专线只解决了跨境段的拥堵问题，节点带宽、超售程度和运维水平同样影响体验。而且“专线”多为服务商宣称，需要自己实测验证。' },
+  { q: '怎么自己测试机场稳不稳定？', a: '买一个月月付，连续几天在晚高峰播放 YouTube 4K，并观察客户端里节点延迟的变化。延迟全天稳定、晚上不缓冲，说明线路质量较好。' },
+];
+const schema = graph(faqPage(faqs));
+---
+
+<Layout
+  title={`稳定机场推荐${year}：IPLC/IEPL 专线机场对比与稳定性判断方法 | 机场 Pro`}
+  description={`${year}年稳定机场推荐：整理宣称 IPLC/IEPL 专线的翻墙机场套餐对比，讲清专线、中转、直连的区别，以及如何用晚高峰测速判断机场是否真的稳定。`}
+  schema={schema}
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '稳定机场推荐' }]} />
+
+  <div class="prose">
+    <h1>{year}年稳定机场推荐</h1>
+    <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
+    <p>对工作、外贸、视频会议和经常使用 AI 工具的用户来说，<strong>稳定比便宜更重要</strong>。稳定的机场通常采用 IPLC、IEPL 等跨境专线，避开晚高峰的公网拥堵，敏感时期受到的干扰也更小。</p>
+
+    <h2>稳定机场的 4 个判断标准</h2>
+    <ol>
+      <li><strong>线路类型：</strong>IPLC/IEPL 专线 &gt; 优质中转（BGP / CN2）&gt; 直连。详见 <a href="/tutorials/iplc-iepl-difference/">IPLC 和 IEPL 的区别</a> 与 <a href="/tutorials/direct-vs-relay/">直连和中转的区别</a>。</li>
+      <li><strong>晚高峰表现：</strong>20:00–23:00 播放 4K 是否缓冲，这是最直接的检验。</li>
+      <li><strong>延迟波动：</strong>同一节点白天和晚上延迟差距越小越好。</li>
+      <li><strong>运营与售后：</strong>是否有公告渠道、工单响应是否及时、运营时间长短。</li>
+    </ol>
+
+    <h2>关于本页列表的说明</h2>
+    <p>以下品牌均在官网<strong>宣称</strong>提供 IPLC/IEPL 专线或 BGP 优化线路。本站正在进行晚高峰实测，<strong>当前顺序为编辑推荐顺序，不是稳定性实测排名</strong>。实测完成后会在各品牌评测中补充数据并更新本页。</p>
+
+    <h2>稳定 / 专线机场对比表</h2>
+  </div>
+
+  <ComparisonTable airports={stableAirports} />
+
+  <div class="prose">
+    <FaqList faqs={faqs} />
+    <p>其他分类：<a href="/">机场推荐总榜</a> · <a href="/cheap/">便宜机场推荐</a> · <a href="/value/">性价比机场推荐</a> · 遇到问题看 <a href="/tutorials/node-timeout-fix/">节点超时排查</a></p>
+  </div>
+</Layout>
+

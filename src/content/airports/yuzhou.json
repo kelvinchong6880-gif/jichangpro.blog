@@ -1,0 +1,105 @@
+{
+  "id": "yuzhou",
+  "name": "宇宙云",
+  "slug": "yuzhou",
+  "intro": "官网宣称提供精品 IEPL/IPLC 专线，有自研客户端，节点覆盖香港、台湾、日本、新加坡、美国等地区。",
+  "fit": "同价位想多要流量的用户",
+  "summary": "行星基础版 25 元/月 160GB，寰宇旗舰版 1500GB；有自研客户端。官网宣称 IEPL/IPLC 专线，覆盖港台日新美等地区。",
+  "website": "https://wzjc.yuzoucloud.cc/#/?code=IWowgER5",
+  "promoLink": "https://wzjc.yuzoucloud.cc/#/?code=IWowgER5",
+  "promoCode": "YUZHOU553",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "星云年付小包",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 96,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "行星基础版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 25,
+      "yearlyPrice": null,
+      "traffic": 160,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "恒星标准版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 50,
+      "yearlyPrice": null,
+      "traffic": 300,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星系专业版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 100,
+      "yearlyPrice": null,
+      "traffic": 700,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "寰宇旗舰版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 200,
+      "yearlyPrice": null,
+      "traffic": 1500,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "行星基础版",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 110,
+      "yearlyPrice": null,
+      "traffic": 120,
+      "type": "one_time",
+      "note": "不限时"
+    },
+    {
+      "name": "恒星标准版 (不限时）",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 220,
+      "yearlyPrice": null,
+      "traffic": 200,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "提供重置流量折扣"
+  ],
+  "cons": [
+    "未独立核实稳定性"
+  ],
+  "reviewSlug": "yuzhou",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/yuzouyun-logo.png"
+  }
+}

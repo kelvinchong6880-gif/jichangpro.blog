@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { siteConfig } from '../config';
+import { graph, organization } from '../utils/schema';
+
+const schema = graph({ '@type': 'AboutPage', name: '关于机场 Pro', url: `${siteConfig.url}/about/`, mainEntity: organization() });
+---
+
+<Layout
+  title="关于机场 Pro：我们是谁、怎么做机场推荐 | 机场 Pro"
+  description="机场 Pro 是面向中文用户的翻墙机场推荐与对比网站。了解我们的定位、内容来源、更新频率与联系方式。"
+  schema={schema}
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '关于本站' }]} />
+
+  <div class="prose">
+    <h1>关于机场 Pro</h1>
+    <p>机场 Pro（jichangpro.blog）是一个面向中文用户的<strong>机场推荐与对比</strong>网站。我们希望解决一个很具体的问题：机场的套餐五花八门，“月付”“年付小包”“不限时”“倍率”混在一起，新手很难算清楚哪家适合自己。</p>
+
+    <h2>我们做什么</h2>
+    <ul>
+      <li><strong>统一整理套餐数据：</strong>把各家机场的月付价格、月流量、年付小包、不限时包放进同一张 <a href="/compare/">对比表</a>，并计算每 GB 成本。</li>
+      <li><strong>撰写评测：</strong>每家机场一篇 <a href="/reviews/">评测</a>，包含选购建议、同价位对比和需要注意的地方。</li>
+      <li><strong>新手教程：</strong>从 <a href="/tutorials/what-is-jichang/">机场是什么</a> 到 <a href="/tutorials/node-timeout-fix/">节点超时排查</a>，用通俗语言讲清楚。</li>
+      <li><strong>持续实测：</strong>逐步补充晚高峰测速与流媒体解锁测试，方法见 <a href="/methodology/">测试方法</a>。</li>
+    </ul>
+
+    <h2>内容原则</h2>
+    <ul>
+      <li>服务商宣称与本站实测分开写，宣称内容一律标注。</li>
+      <li>未知数据不推断，价格每月核对。</li>
+      <li>推广合作公开透明，见 <a href="/disclosure/">利益披露</a>。</li>
+    </ul>
+
+    <h2>更新频率</h2>
+    <p>套餐价格每月核对一次；有机场调价、上新套餐或出现服务问题时随时更新。每个页面都标注了最后更新日期。</p>
+
+    <h2>编辑部与分工</h2>
+    <ul>
+      <li><strong>数据整理：</strong>每月核对各家机场官网套餐、价格与优惠码，更新对比表与核验日期。</li>
+      <li><strong>评测撰写：</strong>按统一结构撰写评测，区分“官网宣称”“第三方测评参考”和“本站实测”。</li>
+      <li><strong>实测：</strong>按 <a href="/methodology/">测试方法</a> 在晚高峰进行测速、流媒体与 AI 可用性测试，结果注明测试日期与环境。</li>
+    </ul>
+
+    <h2>联系我们</h2>
+    <p>发现数据错误、机场服务异常，或有合作与建议，请发送邮件至 <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>。本站主推品牌 Sogo 云的优惠和通知会发布在 <a href={siteConfig.telegramChannel} target="_blank" rel="noopener">Sogo 云 Telegram 频道</a>（该频道属于 Sogo 云，与本站存在推广合作关系，见 <a href="/disclosure/">利益披露</a>）。我们会在核实后更新相关页面，并在页面上标注更新日期。</p>
+
+    <h2>免责声明</h2>
+    <p>本站内容仅供技术交流与消费参考，本站不提供任何网络代理服务。请遵守你所在地区的法律法规。</p>
+  </div>
+</Layout>

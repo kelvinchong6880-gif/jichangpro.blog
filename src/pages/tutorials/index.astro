@@ -1,0 +1,177 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getPublishedTutorials } from '../../utils/data';
+
+const tutorials = await getPublishedTutorials();
+
+// Group by category
+type Tutorial = (typeof tutorials)[number];
+const groupedTutorials = tutorials
+  .sort((a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf())
+  .reduce<Record<string, Tutorial[]>>((acc, tut) => {
+    (acc[tut.data.category] ??= []).push(tut);
+    return acc;
+  }, {});
+---
+
+<Layout 
+  title="机场使用教程：Clash、v2rayN、小火箭配置与常见问题 | 机场 Pro" 
+  description="机场新手教程合集：Clash Verge Rev、v2rayN、Shadowrocket 小火箭配置，机场套餐怎么选，节点超时、订阅更新失败、ChatGPT 打不开等常见问题排查。"
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '使用教程' }]} />
+  
+  <div class="prose">
+    <h1>使用教程</h1>
+    <p>无论你是刚刚接触科学上网的新手，还是希望解决特定设备连接问题的高级用户，都可以在这里找到详尽的教程。</p>
+  </div>
+  
+  <div class="tutorial-search">
+    <div class="search-input-wrapper">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="tutorial-search-input" placeholder="搜索教程..." aria-label="搜索教程" />
+    </div>
+    <p id="search-results-msg" class="search-msg" hidden></p>
+  </div>
+  
+  <div id="tutorial-list">
+    {Object.entries(groupedTutorials).map(([category, tuts]) => (
+      <div class="category-group" data-category={category}>
+        <h2>{category}</h2>
+        <ul class="article-list">
+          {tuts.map(tut => (
+            <li class="article-item" data-title={tut.data.title.toLowerCase()} data-desc={tut.data.description.toLowerCase()}>
+              <a href={`/tutorials/${tut.id}/`} class="article-card">
+                <h3 class="article-title">{tut.data.title}</h3>
+                <p class="article-desc">{tut.data.description}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</Layout>
+
+<script>
+  const searchInput = document.getElementById('tutorial-search-input') as HTMLInputElement | null;
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.article-item'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.category-group'));
+  const msg = document.getElementById('search-results-msg');
+
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let matchCount = 0;
+
+    items.forEach(item => {
+      const match = !q || (item.dataset.title ?? '').includes(q) || (item.dataset.desc ?? '').includes(q);
+      item.hidden = !match;
+      if (match) matchCount++;
+    });
+
+    // 隐藏没有匹配结果的分类
+    groups.forEach(group => {
+      group.hidden = !group.querySelector('.article-item:not([hidden])');
+    });
+
+    if (msg) {
+      msg.hidden = !q;
+      msg.textContent = matchCount > 0 ? `找到 ${matchCount} 篇相关教程` : '没有找到相关教程';
+    }
+  });
+</script>
+
+<style>
+  .tutorial-search {
+    margin: 2rem 0;
+  }
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0 1rem;
+    max-width: 500px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input-wrapper:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+  }
+  .search-icon {
+    color: var(--color-text-lighter);
+  }
+  .tutorial-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0.875rem 0.75rem;
+    font-size: 1rem;
+  }
+  .search-msg {
+    margin-top: 0.75rem;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+  }
+  .category-group {
+    margin-bottom: 3.5rem;
+  }
+  .category-group h2 {
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--color-text);
+  }
+  .article-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .article-item {
+    display: block;
+  }
+  .article-card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-bg);
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+  }
+  .article-card:hover {
+    border-color: #bae6fd;
+    box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.1), 0 8px 10px -6px rgba(2, 132, 199, 0.1);
+    transform: translateY(-4px);
+  }
+  .article-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+  .article-card:hover .article-title {
+    color: var(--color-primary);
+  }
+  .article-desc {
+    color: var(--color-text-light);
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

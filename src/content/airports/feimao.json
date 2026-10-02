@@ -1,0 +1,97 @@
+{
+  "id": "feimao",
+  "name": "飞猫云",
+  "slug": "feimao",
+  "intro": "官网宣称全 IPLC 专线网络，最高 2.5Gbps 速率，原生 IP 解锁 Netflix 等流媒体服务。",
+  "fit": "学生党、流媒体用户",
+  "summary": "星耀版 25 元/月 150GB，另有 84 元/年的学生版小包。官网宣称全 IPLC 专线、最高 2.5Gbps，并提供原生 IP 解锁 Netflix。",
+  "website": "https://flycat1.flycatvipaff.cc/#/?code=w5lO9fqB",
+  "promoLink": "https://flycat1.flycatvipaff.cc/#/?code=w5lO9fqB",
+  "promoCode": "flycat888",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "飞猫 · 学生版",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 84,
+      "traffic": 50,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "飞猫 · 星耀版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 25,
+      "yearlyPrice": null,
+      "traffic": 150,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "飞猫 · 星环版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 45,
+      "yearlyPrice": null,
+      "traffic": 300,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "飞猫 · 银河版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 85,
+      "yearlyPrice": null,
+      "traffic": 600,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "飞猫 · 宇宙版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 150,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "飞猫 · 不限时套餐",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 680,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN"
+  ],
+  "tags": [
+    "专线",
+    "流媒体解锁"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "资料宣称 IPLC 专线",
+    "不限设备连接"
+  ],
+  "cons": [
+    "未独立核实稳定性"
+  ],
+  "reviewSlug": "feimao",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/feimaoyun-logo.png"
+  }
+}

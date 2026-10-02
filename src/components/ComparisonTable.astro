@@ -1,0 +1,367 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import { getPlanStats, type Airport } from '../utils/data';
+
+interface Props {
+  airports: Airport[];
+}
+
+const { airports } = Astro.props;
+
+const rows = airports.map((airport, index) => ({ airport, index, stats: getPlanStats(airport) }));
+
+// 标签筛选项：只展示实际存在的标签
+const preferredTags = ['便宜', '性价比', '稳定', '专线', 'BGP优化', '流媒体解锁', '不限设备'];
+const presentTags = new Set(airports.flatMap(a => a.tags));
+const tagOptions = preferredTags.filter(t => presentTags.has(t));
+
+const money = (v: number | null) => (v !== null ? `¥${v}` : '未知/无');
+---
+
+<div class="comparison-container" data-compare>
+  <div class="filter-bar">
+    <label class="field search-field">
+      <span class="field-icon" aria-hidden="true">🔍</span>
+      <span class="sr-only">搜索机场名称</span>
+      <input type="search" data-search placeholder="搜索机场名称..." />
+    </label>
+    <label class="field">
+      <span class="field-label">标签:</span>
+      <select data-tag>
+        <option value="">全部</option>
+        {tagOptions.map(t => <option value={t}>{t}</option>)}
+      </select>
+    </label>
+    <button type="button" class="reset-btn" data-reset>重置</button>
+  </div>
+
+  <p class="order-notice">
+    *以下为本站编辑推荐顺序，部分链接含推广参数；套餐资料与实测结果分别展示。点击表头可重新排序。
+  </p>
+
+  <div class="table-wrapper">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th data-sort="name" aria-sort="none"><button type="button">品牌 <span class="sort-icon" aria-hidden="true"></span></button></th>
+          <th data-sort="monthly" aria-sort="none"><button type="button">月付起价 <span class="sort-icon" aria-hidden="true"></span></button></th>
+          <th data-sort="yearly" aria-sort="none"><button type="button">年付起价 <span class="sort-icon" aria-hidden="true"></span></button></th>
+          <th data-sort="traffic" aria-sort="none"><button type="button">月流量 (GB) <span class="sort-icon" aria-hidden="true"></span></button></th>
+          <th>一次性套餐</th>
+          <th>优惠码</th>
+          <th>资料状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ airport, index, stats }) => (
+          <tr
+            data-row
+            data-index={index}
+            data-name={airport.name}
+            data-tags={airport.tags.join(',')}
+            data-monthly={stats.minMonthly ?? ''}
+            data-yearly={stats.minYearly ?? ''}
+            data-traffic={stats.maxTraffic ?? ''}
+          >
+            <td>
+              <div class="airport-name">
+                <BrandLogo brandName={airport.name} squareSrc={airport.logo?.square} width={32} height={32} hideAlt={true} />
+                <strong>{airport.name}</strong>
+                {airport.isDemo && <span class="demo-badge">演示</span>}
+              </div>
+              {airport.priceCheckDate && <div class="meta-info">核验: {airport.priceCheckDate}</div>}
+            </td>
+            <td>{money(stats.minMonthly)}</td>
+            <td>{money(stats.minYearly)}</td>
+            <td>{stats.maxTraffic ?? '未知'}</td>
+            <td>{stats.oneTimeCount > 0 ? '有' : '无'}</td>
+            <td>{airport.promoCode ? <code class="promo-code copy-code" data-code={airport.promoCode} title="点击复制">{airport.promoCode} <span class="copy-icon">📋</span></code> : '-'}</td>
+            <td>
+              {stats.hasConflict
+                ? <span class="status status-warning" title="部分套餐资料存在冲突，购买前请核实">待核实</span>
+                : <span class="status status-ok" title="套餐资料已整理，线路表现尚未实测">已整理</span>}
+            </td>
+            <td>
+              <div class="actions">
+                {airport.promoLink && <a href={airport.promoLink} target="_blank" rel="sponsored noopener noreferrer" class="btn btn-primary">前往注册</a>}
+                {airport.reviewSlug && <a href={`/reviews/${airport.reviewSlug}/`} class="btn btn-secondary">详情</a>}
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <div class="no-results" data-empty hidden>没有找到符合条件的品牌。</div>
+  </div>
+</div>
+
+<script>
+  type SortKey = 'name' | 'monthly' | 'yearly' | 'traffic';
+  type SortDir = 'asc' | 'desc';
+
+  // 每个对比表独立初始化（同一页面可放多个表）
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach(root => {
+    const search = root.querySelector<HTMLInputElement>('[data-search]')!;
+    const tagSelect = root.querySelector<HTMLSelectElement>('[data-tag]')!;
+    const resetBtn = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const tbody = root.querySelector('tbody')!;
+    const rows = Array.from(root.querySelectorAll<HTMLTableRowElement>('tr[data-row]'));
+    const headers = Array.from(root.querySelectorAll<HTMLTableCellElement>('th[data-sort]'));
+
+    let sort: { key: SortKey | null; dir: SortDir } = { key: null, dir: 'asc' };
+
+    // 空值（未知）无论升序降序都排在最后
+    const numeric = (row: HTMLElement, key: SortKey) => {
+      const v = row.dataset[key];
+      return v === undefined || v === '' ? null : Number(v);
+    };
+
+    const compare = (a: HTMLElement, b: HTMLElement) => {
+      if (!sort.key) return Number(a.dataset.index) - Number(b.dataset.index);
+      const sign = sort.dir === 'asc' ? 1 : -1;
+      if (sort.key === 'name') {
+        return sign * (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '', 'zh-CN');
+      }
+      const va = numeric(a, sort.key);
+      const vb = numeric(b, sort.key);
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      return sign * (va - vb);
+    };
+
+    const render = () => {
+      const q = search.value.trim().toLowerCase();
+      const tag = tagSelect.value;
+      let visible = 0;
+
+      rows.forEach(row => {
+        const matchName = !q || (row.dataset.name ?? '').toLowerCase().includes(q);
+        const matchTag = !tag || (row.dataset.tags ?? '').split(',').includes(tag);
+        row.hidden = !(matchName && matchTag);
+        if (!row.hidden) visible++;
+      });
+
+      empty.hidden = visible > 0;
+      [...rows].sort(compare).forEach(row => tbody.appendChild(row));
+
+      headers.forEach(th => {
+        const active = th.dataset.sort === sort.key;
+        th.setAttribute('aria-sort', active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none');
+      });
+    };
+
+    search.addEventListener('input', render);
+    tagSelect.addEventListener('change', render);
+    resetBtn.addEventListener('click', () => {
+      search.value = '';
+      tagSelect.value = '';
+      sort = { key: null, dir: 'asc' };
+      render();
+    });
+
+    headers.forEach(th => {
+      th.querySelector('button')?.addEventListener('click', () => {
+        const key = th.dataset.sort as SortKey;
+        sort = sort.key === key
+          ? { key, dir: sort.dir === 'asc' ? 'desc' : 'asc' }
+          : { key, dir: 'asc' };
+        render();
+      });
+    });
+  });
+
+</script>
+
+<style>
+  .comparison-container {
+    margin: 2rem 0;
+  }
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: var(--color-bg-alt);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0 0.75rem;
+  }
+  .search-field {
+    flex: 1;
+    max-width: 300px;
+    min-width: 200px;
+  }
+  .field-icon, .field-label {
+    color: var(--color-text-lighter);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  .field input, .field select {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0.75rem;
+    width: 100%;
+    font-size: 0.9375rem;
+    font-family: inherit;
+  }
+  .field select { cursor: pointer; }
+  .field:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+  }
+  .reset-btn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover {
+    background: var(--color-border);
+  }
+
+  .order-notice {
+    font-size: 0.875rem;
+    color: var(--color-text-lighter);
+    margin-bottom: 1rem;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  @media (max-width: 768px) {
+    .table-wrapper::before {
+      content: '← 左右滑动查看完整表格 →';
+      display: block;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-text-lighter);
+      padding-top: 0.5rem;
+    }
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 900px;
+  }
+  .compare-table th, .compare-table td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .compare-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .compare-table tbody tr:nth-child(even) {
+    background-color: var(--color-bg-alt);
+  }
+  .compare-table tbody tr:hover {
+    background-color: rgba(2, 132, 199, 0.03);
+  }
+  .compare-table th {
+    background: var(--color-bg-alt);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    letter-spacing: 0.05em;
+  }
+  .compare-table th button {
+    all: unset;
+    cursor: pointer;
+    user-select: none;
+  }
+  .compare-table th[data-sort]:hover {
+    background: #f1f5f9;
+    color: var(--color-text);
+  }
+  .compare-table th button:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  .sort-icon::after {
+    content: '↕';
+    opacity: 0.2;
+    margin-left: 0.25rem;
+  }
+  [aria-sort='ascending'] .sort-icon::after {
+    content: '↑';
+    opacity: 1;
+    color: var(--color-primary);
+  }
+  [aria-sort='descending'] .sort-icon::after {
+    content: '↓';
+    opacity: 1;
+    color: var(--color-primary);
+  }
+
+  .airport-name {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+  }
+  .meta-info {
+    font-size: 0.75rem;
+    color: var(--color-text-lighter);
+    margin-top: 0.375rem;
+  }
+  .promo-code {
+    display: inline-block;
+    background: var(--color-bg-alt);
+    border: 1px dashed var(--color-border);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--color-primary);
+  }
+  .status {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .status-warning {
+    color: #991b1b;
+    background: #fee2e2;
+  }
+  .status-ok {
+    color: #166534;
+    background: #dcfce7;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .actions .btn { white-space: nowrap; }
+  .no-results {
+    padding: 3rem;
+    text-align: center;
+    color: var(--color-text-light);
+  }
+</style>

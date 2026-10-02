@@ -1,0 +1,180 @@
+---
+const currentPath = Astro.url.pathname;
+const navItems = [
+  { path: '/', label: '机场推荐' },
+  { path: '/cheap/', label: '便宜机场推荐' },
+  { path: '/stable/', label: '稳定机场推荐' },
+  { path: '/value/', label: '性价比机场推荐' },
+  { path: '/compare/', label: '机场综合对比表' },
+  { path: '/tutorials/', label: '使用教程' },
+];
+---
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="机场 Pro 首页">
+      <img src="/logo.jpg" alt="" class="logo-img" width="36" height="36" />
+      <span class="logo-text">机场 Pro</span>
+    </a>
+    
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="打开菜单">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav id="main-nav" class="main-nav" aria-label="主导航">
+      <ul>
+        {navItems.map(item => {
+          // Check if current path starts with item.path (except for '/', which needs exact match)
+          const isActive = item.path === '/' 
+            ? currentPath === '/' 
+            : currentPath.startsWith(item.path);
+            
+          return (
+            <li>
+              <a 
+                href={item.path} 
+                class={isActive ? 'active' : ''}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const mainNav = document.getElementById('main-nav');
+
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', (!isExpanded).toString());
+      mainNav.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-label', isExpanded ? '打开菜单' : '关闭菜单');
+    });
+  }
+</script>
+
+<style>
+  .header {
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .logo-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+  .logo:hover {
+    text-decoration: none;
+  }
+  
+  .main-nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .main-nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .main-nav a:hover,
+  .main-nav a.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+    position: relative;
+  }
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+    left: 0;
+  }
+  .hamburger::before { top: -6px; }
+  .hamburger::after { bottom: -6px; }
+
+  @media (max-width: 768px) {
+    .menu-toggle {
+      display: block;
+    }
+    .main-nav {
+      position: absolute;
+      top: 4rem;
+      left: 0;
+      right: 0;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      display: none;
+    }
+    .main-nav.is-open {
+      display: block;
+    }
+    .main-nav ul {
+      flex-direction: column;
+      gap: 0;
+    }
+    .main-nav a {
+      display: block;
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-bg-alt);
+    }
+    .main-nav a.active {
+      background: var(--color-bg-alt);
+      border-bottom-color: var(--color-bg-alt);
+      border-left: 4px solid var(--color-primary);
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  article?: boolean;
+  schema?: Record<string, unknown>;
+  noindex?: boolean;
+}
+
+const { 
+  title, 
+  description, 
+  canonical = Astro.url.pathname, 
+  ogImage = '/og-image.png', 
+  article = false,
+  schema,
+  noindex = false
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString() ?? 'https://jichangpro.blog/';
+const canonicalUrl = new URL(canonical, siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteUrl).toString();
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+{noindex
+  ? <meta name="robots" content="noindex, follow" />
+  : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content={article ? 'article' : 'website'} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:site_name" content="机场 Pro" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<!-- JSON-LD -->
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

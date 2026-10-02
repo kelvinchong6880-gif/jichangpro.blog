@@ -1,0 +1,127 @@
+{
+  "id": "sogo",
+  "name": "Sogo 云",
+  "slug": "sogo",
+  "intro": "官网宣称全线 IPLC/IEPL 专线，支持多设备不限量同时在线，并提供原生 IP 解锁主流流媒体与 AI 工具。",
+  "fit": "想在一家买齐月付和不限时套餐的用户",
+  "summary": "套餐梯度最完整：月付 4 档（25–150 元）+ 不限时流量包 4 档，另有年付小包。官网宣称 IPLC/IEPL 专线、不限设备数、原生 IP 解锁流媒体与 AI 工具。",
+  "website": "https://wzjc.sogoyunaff.cc/#/?code=BC2BL855",
+  "promoLink": "https://wzjc.sogoyunaff.cc/#/?code=BC2BL855",
+  "promoCode": "sogo10000",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "小包-年付版",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 98,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "基础版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 25,
+      "yearlyPrice": null,
+      "traffic": 150,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "优选版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 45,
+      "yearlyPrice": null,
+      "traffic": 350,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "强化版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 80,
+      "yearlyPrice": null,
+      "traffic": 550,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "顶配版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 150,
+      "yearlyPrice": null,
+      "traffic": 1050,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "SOGO基础餐不限时版",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 120,
+      "yearlyPrice": null,
+      "traffic": 120,
+      "type": "one_time"
+    },
+    {
+      "name": "SOGO优选餐不限时版",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 220,
+      "yearlyPrice": null,
+      "traffic": 250,
+      "type": "one_time"
+    },
+    {
+      "name": "SOGO强化餐不限时版",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 450,
+      "yearlyPrice": null,
+      "traffic": 500,
+      "type": "one_time"
+    },
+    {
+      "name": "SOGO至尊餐不限时版",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 850,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN",
+    "Surge"
+  ],
+  "tags": [
+    "专线",
+    "流媒体解锁",
+    "不限设备"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "提供 IPLC/IEPL 专线",
+    "不限制设备数量",
+    "原生 IP 支持流媒体"
+  ],
+  "cons": [
+    "未独立核实稳定性"
+  ],
+  "reviewSlug": "sogo",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/sogoyun-logo.webp"
+  }
+}

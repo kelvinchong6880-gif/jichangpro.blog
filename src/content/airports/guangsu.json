@@ -1,0 +1,104 @@
+{
+  "id": "guangsu",
+  "name": "光速云",
+  "slug": "guangsu",
+  "intro": "官网宣称提供全球 IPLC 节点，原生 IP 解锁流媒体，支持多种付费周期。",
+  "fit": "预算 25–35 元、想多要流量的用户",
+  "summary": "极速版 23 元/月 138GB，流光版 34 元/月 238GB，中档价位流量给得较足。官网宣称全球节点 IPLC、原生 IP 解锁流媒体。",
+  "website": "https://mdlky.gsyaff.com/#/?code=5PLKd4WN",
+  "promoLink": "https://mdlky.gsyaff.com/#/?code=5PLKd4WN",
+  "promoCode": "AMM",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "轻量版",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 99,
+      "traffic": 59,
+      "type": "monthly_refresh",
+      "note": "折合¥8.25/月，需一次支付¥99"
+    },
+    {
+      "name": "光速云 · 极速版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 23,
+      "yearlyPrice": null,
+      "traffic": 138,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "光速云 · 流光版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 34,
+      "yearlyPrice": null,
+      "traffic": 238,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "光速云 · 量子版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 68,
+      "yearlyPrice": null,
+      "traffic": 450,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "光速云 · 无界版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 130,
+      "yearlyPrice": null,
+      "traffic": 900,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "光速云 · 不限时套餐",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 680,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "one_time"
+    },
+    {
+      "name": "光速云 · 定制套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 680,
+      "yearlyPrice": null,
+      "traffic": 500,
+      "type": "monthly_refresh"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "资料宣称全节点 IPLC",
+    "不限设备"
+  ],
+  "cons": [],
+  "reviewSlug": "guangsu",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/guangsuyun-logo.png"
+  }
+}

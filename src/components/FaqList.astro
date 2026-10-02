@@ -1,0 +1,51 @@
+---
+import type { Faq } from '../utils/schema';
+
+interface Props {
+  faqs: Faq[];
+  title?: string;
+  /** 折叠式（details）或平铺式 */
+  collapsible?: boolean;
+  /** 问题使用的标题级别 */
+  headingLevel?: 'h3' | 'h4';
+}
+
+const { faqs, title = '常见问题', collapsible = false, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+
+{faqs.length > 0 && (
+  <section class="faq-list">
+    {title && <h2>{title}</h2>}
+    {faqs.map(f => collapsible ? (
+      <details class="faq-item">
+        <summary><H class="faq-q">{f.q}</H></summary>
+        <p>{f.a}</p>
+      </details>
+    ) : (
+      <div class="faq-item faq-flat">
+        <H class="faq-q">{f.q}</H>
+        <p>{f.a}</p>
+      </div>
+    ))}
+  </section>
+)}
+
+<style>
+  .faq-list { margin: 3rem 0; }
+  .faq-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .faq-flat {
+    border: none;
+    padding: 0;
+    margin-bottom: 1.25rem;
+  }
+  summary { cursor: pointer; }
+  details .faq-q { display: inline; }
+  .faq-q { font-size: 1.0625rem; margin: 0; }
+  .faq-item p { margin: 0.5rem 0 0; color: var(--color-text-light); }
+</style>

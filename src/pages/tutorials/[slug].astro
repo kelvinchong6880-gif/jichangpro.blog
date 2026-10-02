@@ -1,0 +1,204 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection, render } from 'astro:content';
+import { getPublishedTutorials } from '../../utils/data';
+import { article, graph, toDateString } from '../../utils/schema';
+
+export async function getStaticPaths() {
+  const allTutorials = await getCollection('tutorials');
+  const publishedTutorials = import.meta.env.PROD 
+    ? allTutorials.filter(t => !t.data.draft)
+    : allTutorials;
+    
+  return publishedTutorials.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const updateDateStr = toDateString(entry.data.updatedAt);
+
+const schema = graph(article({
+  title: entry.data.title,
+  description: entry.data.description,
+  path: `/tutorials/${entry.id}/`,
+  author: entry.data.author,
+  published: entry.data.publishedAt,
+  updated: entry.data.updatedAt,
+}));
+
+// 相关文章：只链接已发布的教程，并保持 frontmatter 中的顺序
+const published = await getPublishedTutorials();
+const relatedArticles = entry.data.relatedArticles
+  .map(id => published.find(t => t.id === id))
+  .filter((t): t is NonNullable<typeof t> => Boolean(t));
+
+// 更多教程：排除当前文章与“相关阅读”中已有的文章
+const moreTutorials = published
+  .filter(t => t.id !== entry.id && !entry.data.relatedArticles.includes(t.id))
+  .sort((a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf())
+  .slice(0, 8);
+---
+
+<Layout 
+  title={`${entry.data.title} | 机场 Pro`} 
+  description={entry.data.description}
+  article={true}
+  schema={schema}
+>
+  <Breadcrumbs items={[
+    { label: '首页', href: '/' }, 
+    { label: '使用教程', href: '/tutorials/' },
+    { label: entry.data.title }
+  ]} />
+  
+  <div class="tutorial-layout">
+    <article class="prose">
+      <header class="article-header">
+        <h1>{entry.data.title}</h1>
+        <p class="article-description">{entry.data.description}</p>
+        <div class="article-meta">
+          <span>分类: {entry.data.category}</span>
+          <span>作者: {entry.data.author}</span>
+          <span>更新于: <time datetime={updateDateStr}>{updateDateStr}</time></span>
+          {entry.data.draft && <span class="draft-badge">草稿</span>}
+        </div>
+      </header>
+      
+      <div class="article-content">
+        <Content />
+      </div>
+
+      {relatedArticles.length > 0 && (
+        <div class="related-articles-section">
+          <h2>相关扩展阅读</h2>
+          <ul class="related-list">
+            {relatedArticles.map(rel => (
+              <li><a href={`/tutorials/${rel.id}/`}>{rel.data.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {moreTutorials.length > 0 && (
+        <div class="related-articles-section">
+          <h2>更多机场教程</h2>
+          <ul class="related-list">
+            {moreTutorials.map(t => <li><a href={`/tutorials/${t.id}/`}>{t.data.title}</a></li>)}
+          </ul>
+          <p>选机场请看：<a href="/">2026 机场推荐</a> · <a href="/compare/">机场对比表</a> · <a href="/coupons/">机场优惠码</a></p>
+        </div>
+      )}
+    </article>
+
+    {headings.length > 0 && (
+      <aside class="toc-sidebar">
+        <div class="toc-container">
+          <h3>目录</h3>
+          <ul class="toc-list">
+            {headings.filter(h => h.depth <= 3).map(h => (
+              <li class={`toc-level-${h.depth}`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    )}
+  </div>
+
+</Layout>
+
+<style>
+  .tutorial-layout {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+  .prose {
+    flex: 1;
+    min-width: 0;
+  }
+  .toc-sidebar {
+    display: none;
+    width: 250px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 5rem;
+  }
+  @media (min-width: 1024px) {
+    .toc-sidebar {
+      display: block;
+    }
+  }
+  .toc-container {
+    background: var(--color-bg-alt);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+  .toc-container h3 {
+    margin-top: 0;
+    font-size: 1.125rem;
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  .toc-list li {
+    margin-bottom: 0.5rem;
+  }
+  .toc-level-2 { margin-left: 0; font-weight: 500; }
+  .toc-level-3 { margin-left: 1rem; color: var(--color-text-light); }
+  .toc-list a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .toc-list a:hover {
+    color: var(--color-primary);
+  }
+
+  .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .article-description {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    margin-bottom: 1.5rem;
+  }
+  .article-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--color-text-lighter);
+    font-size: 0.875rem;
+  }
+  .draft-badge {
+    background: var(--color-alert-bg);
+    color: var(--color-alert-text);
+    padding: 0 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+  .article-content {
+    line-height: var(--line-height-base);
+  }
+  
+  .related-articles-section {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--color-border);
+  }
+  .related-list {
+    list-style: circle;
+    padding-left: 1.5rem;
+  }
+  .related-list li {
+    margin-bottom: 0.5rem;
+  }
+</style>

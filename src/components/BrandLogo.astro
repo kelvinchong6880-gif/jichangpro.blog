@@ -1,0 +1,76 @@
+---
+interface Props {
+  brandName: string;
+  squareSrc?: string | null;
+  horizontalSrc?: string | null;
+  type?: 'square' | 'horizontal'; // 默认是 square
+  width?: number;
+  height?: number;
+  className?: string;
+  hideAlt?: boolean; // 如果周边已经有品牌文字，可设为true将alt置空
+}
+
+const { 
+  brandName, 
+  squareSrc, 
+  horizontalSrc, 
+  type = 'square', 
+  width, 
+  height,
+  className = '',
+  hideAlt = false
+} = Astro.props;
+
+const src = type === 'horizontal' ? (horizontalSrc || squareSrc) : squareSrc;
+const altText = hideAlt ? '' : `${brandName} Logo`;
+
+// 默认占位图尺寸
+const defaultSize = type === 'horizontal' ? { width: 120, height: 40 } : { width: 48, height: 48 };
+const w = width || defaultSize.width;
+const h = height || defaultSize.height;
+
+---
+
+<div class={`brand-logo-container ${type} ${className}`} style={`width: ${w}px; height: ${h}px;`}>
+  {src ? (
+    <img src={src} alt={altText} width={w} height={h} class="brand-logo-img" loading="lazy" decoding="async" />
+  ) : (
+    <div class="brand-logo-placeholder">
+      <span>{brandName.substring(0, 4)}</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .brand-logo-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb; /* 中性底色，适配深色或透明Logo */
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .brand-logo-container.square {
+    border-radius: 8px;
+  }
+  .brand-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .brand-logo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+    color: #4b5563;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: center;
+    line-height: 1.1;
+    padding: 2px;
+  }
+</style>

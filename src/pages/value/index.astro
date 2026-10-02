@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getAirports, getPlanStats } from '../../utils/data';
+import { siteConfig } from '../../config';
+import FaqList from '../../components/FaqList.astro';
+import { faqPage, graph, type Faq } from '../../utils/schema';
+
+const allAirports = await getAirports();
+const year = siteConfig.lastUpdated.slice(0, 4);
+
+// 性价比：取每家“月付 30–50 元档”（没有则取第二档）套餐计算每 GB 成本；列表保持编辑推荐顺序
+const rows = allAirports.map(a => {
+  const s = getPlanStats(a);
+  const mid = s.monthlyPlans.find(p => p.price >= 30 && p.price <= 50) ?? s.monthlyPlans[1] ?? s.monthlyPlans[0];
+  return { a, s, mid, perGb: mid ? mid.price / mid.traffic : Infinity };
+}).filter(r => r.mid);
+const valueAirports = rows.map(r => r.a);
+const bestPerGb = [...rows].sort((x, y) => x.perGb - y.perGb)[0];
+
+const faqs: Faq[] = [
+  { q: '性价比最高的机场是哪家？', a: bestPerGb ? `按本站收录品牌中档套餐的每 GB 成本计算，${bestPerGb.a.name}的${bestPerGb.mid.name}（¥${bestPerGb.mid.price}/月 ${bestPerGb.mid.traffic}GB）单价最低。但性价比还取决于你的实际用量和对稳定性的要求。` : '请查看下方对比表。' },
+  { q: '性价比和便宜有什么区别？', a: '便宜看的是“付多少钱”，性价比看的是“每一块钱换到多少可用的流量和体验”。用量大的用户买中档套餐，单价往往比入门套餐更低。' },
+  { q: '多人合租划算吗？', a: '多数机场宣称不限设备数，几个人合买一个大流量套餐可以显著降低人均成本。但要注意流量消耗，并且只与信任的人共享订阅链接。' },
+];
+const schema = graph(faqPage(faqs));
+---
+
+<Layout
+  title={`性价比机场推荐${year}：中档套餐价格、流量与每 GB 成本对比 | 机场 Pro`}
+  description={`${year}年性价比机场推荐：对比 ${rows.length} 家机场中档月付套餐的每 GB 成本、流量、价格和不限时包，帮你在预算与体验之间找到平衡点。`}
+  schema={schema}
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '性价比机场推荐' }]} />
+
+  <div class="prose">
+    <h1>{year}年性价比机场推荐</h1>
+    <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
+    <p>“性价比”不是单纯的便宜，而是<strong>每一块钱能换到多少可用流量和体验</strong>。对每月用量 200GB 以上的用户来说，30–50 元的中档套餐单价往往比入门套餐更低。</p>
+
+    <h2>各品牌中档套餐每 GB 成本</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>品牌</th><th>中档套餐</th><th>价格</th><th>流量</th><th>每 GB</th></tr></thead>
+        <tbody>
+          {rows.map(r => (
+            <tr>
+              <td><a href={`/reviews/${r.a.reviewSlug}/`}>{r.a.name}</a></td>
+              <td>{r.mid.name}</td>
+              <td>¥{r.mid.price}/月</td>
+              <td>{r.mid.traffic}GB</td>
+              <td>¥{r.perGb.toFixed(3)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="note">中档套餐取每家月付 30–50 元区间的套餐；没有该价位的取第二档。数据来自官网公开价格，以官网为准。</p>
+
+    <h2>我们怎么看性价比</h2>
+    <ul>
+      <li><strong>价格与流量的平衡：</strong>重度用户几十元能买到 300GB 以上，往往更划算。</li>
+      <li><strong>不限时套餐：</strong>平时极少使用的用户，一次性买 100–300GB 不限时流量可以用很久。</li>
+      <li><strong>长期折扣：</strong>部分品牌（如一翻云）明确标注年付价，长期用户可省约 30%。</li>
+      <li><strong>设备与合租：</strong>多数机场宣称不限设备数，适合家人合租分摊成本。</li>
+    </ul>
+
+    <h2>性价比机场完整对比表</h2>
+  </div>
+
+  <ComparisonTable airports={valueAirports} />
+
+  <div class="prose">
+    <FaqList faqs={faqs} />
+    <p>其他分类：<a href="/">机场推荐总榜</a> · <a href="/cheap/">便宜机场推荐</a> · <a href="/stable/">稳定机场推荐</a></p>
+  </div>
+</Layout>
+
+<style>
+  .note { font-size: 0.8125rem; color: var(--color-text-lighter); }
+</style>

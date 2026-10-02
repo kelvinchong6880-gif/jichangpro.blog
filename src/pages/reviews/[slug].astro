@@ -1,0 +1,216 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BrandLogo from '../../components/BrandLogo.astro';
+import { getCollection, render } from 'astro:content';
+import FaqList from '../../components/FaqList.astro';
+import { getAirports, getPlanStats } from '../../utils/data';
+import { article, faqPage, graph, toDateString, type Faq } from '../../utils/schema';
+
+export async function getStaticPaths() {
+  const allReviews = await getCollection('reviews');
+  const publishedReviews = import.meta.env.PROD
+    ? allReviews.filter(r => !r.data.draft)
+    : allReviews;
+
+  return publishedReviews.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const airports = await getAirports();
+const airport = airports.find(a => a.id === entry.data.serviceId) ?? airports.find(a => a.id === entry.id);
+const name = airport?.name ?? entry.data.serviceId;
+const stats = airport ? getPlanStats(airport) : null;
+
+const pubDateStr = toDateString(entry.data.publishedAt);
+const updateDateStr = toDateString(entry.data.updatedAt);
+
+// 每个评测页底部的常见问题（根据套餐数据生成）
+const faqs: Faq[] = airport && stats ? [
+  {
+    q: `${name}多少钱一个月？`,
+    a: stats.minMonthly !== null
+      ? `${name}月付最低 ¥${stats.minMonthly}/月（${stats.entryTraffic}GB），最高档每月 ${stats.maxTraffic}GB。${stats.minYearlySmall ? `另有年付小包 ¥${stats.minYearlySmall.price}/年（每月 ${stats.minYearlySmall.traffic}GB），折合约 ¥${(stats.minYearlySmall.price / 12).toFixed(1)}/月。` : ''}价格以官网为准。`
+      : `${name}暂无月付套餐，具体以官网为准。`,
+  },
+  {
+    q: `${name}有不限时（一次性）套餐吗？`,
+    a: stats.oneTimeCount > 0
+      ? `有，共 ${stats.oneTimeCount} 档，最低 ¥${stats.minOneTime?.price}（${stats.minOneTime?.traffic}GB），流量不按月重置，用完为止，适合低频用户或作为备用机场。`
+      : `目前官网资料中没有不限时套餐。`,
+  },
+  {
+    q: `${name}支持哪些客户端？`,
+    a: `官网资料显示支持 ${airport.clients.join('、')}。Windows 推荐 Clash Verge Rev，安卓推荐 Clash Meta for Android，iPhone 推荐 Shadowrocket。`,
+  },
+  {
+    q: `${name}的优惠码是什么？`,
+    a: airport.promoCode ? `优惠码为 ${airport.promoCode}，在结算页填写即可，具体优惠幅度和适用套餐以结算页显示为准。` : `目前没有公开优惠码。`,
+  },
+] : [];
+
+const schema = graph(
+  article({
+    title: entry.data.title,
+    description: entry.data.description,
+    path: `/reviews/${entry.id}/`,
+    author: entry.data.author,
+    published: entry.data.publishedAt,
+    updated: entry.data.updatedAt,
+    about: { '@type': 'Service', name, serviceType: '网络代理订阅服务' },
+  }),
+  faqs.length > 0 && faqPage(faqs),
+);
+
+// 其他评测（内链）
+const others = airports.filter(a => a.id !== airport?.id && a.reviewSlug);
+---
+
+<Layout
+  title={`${entry.data.title} | 机场 Pro`}
+  description={entry.data.description}
+  article={true}
+  schema={schema}
+>
+  <Breadcrumbs items={[
+    { label: '首页', href: '/' },
+    { label: '机场评测', href: '/reviews/' },
+    { label: `${name}评测` }
+  ]} />
+
+  <article class="prose">
+    <header class="article-header">
+      <div class="review-title-group">
+        {airport && (
+          <BrandLogo
+            brandName={airport.name}
+            squareSrc={airport.logo?.square}
+            width={72}
+            height={72}
+            hideAlt={true}
+          />
+        )}
+        <h1>{entry.data.title}</h1>
+      </div>
+      <div class="article-meta">
+        <span>作者：{entry.data.author}</span>
+        <span>发布：<time datetime={pubDateStr}>{pubDateStr}</time></span>
+        <span>更新：<time datetime={updateDateStr}>{updateDateStr}</time></span>
+        {entry.data.draft && <span class="draft-badge">草稿</span>}
+      </div>
+    </header>
+
+    <div class="disclosure-alert">
+      <p><strong>利益披露：</strong>{entry.data.disclosure}</p>
+      <p><strong>资料说明：</strong>{entry.data.testNote}</p>
+    </div>
+
+    <div class="article-content">
+      <Content />
+    </div>
+
+    {entry.data.thirdParty.length > 0 && (
+      <section class="third-party" id="third-party">
+        <h2>第三方测评参考</h2>
+        <p class="tp-note">以下为其他网站公开发布的{name}测试结论，由本站编辑摘要整理，<strong>不是本站实测，本站尚未复核</strong>。测试结果受地区、运营商、时间段影响很大，仅供参考，请以自己的实际测试为准。</p>
+        <ul class="tp-list">
+          {entry.data.thirdParty.map(t => (
+            <li>
+              <p class="tp-meta"><a href={t.url} target="_blank" rel="nofollow noopener noreferrer">{t.source}</a> · 测试/发布时间：{t.date}</p>
+              <p>{t.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <FaqList faqs={faqs} title={`${name}常见问题`} />
+
+    <section class="other-reviews">
+      <h2>其他机场评测</h2>
+      <ul>
+        {others.map(o => <li><a href={`/reviews/${o.reviewSlug}/`}>{o.name}评测</a></li>)}
+      </ul>
+      <p>新手教程：<a href="/tutorials/how-to-choose/">如何选择机场</a> · <a href="/tutorials/clash-verge-rev-guide/">Clash Verge Rev 教程</a> · <a href="/tutorials/v2rayn-guide/">v2rayN 教程</a> · <a href="/tutorials/shadowrocket-guide/">小火箭教程</a> · <a href="/tutorials/node-timeout-fix/">节点超时排查</a></p>
+      <p>按需求选择：<a href="/">2026 机场推荐榜单</a> · <a href="/cheap/">便宜机场推荐</a> · <a href="/stable/">稳定机场推荐</a> · <a href="/value/">性价比机场推荐</a></p>
+    </section>
+  </article>
+
+</Layout>
+
+<style>
+  .third-party { margin-top: 3rem; }
+  .tp-note {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    background: var(--color-bg-alt);
+    border-left: 4px solid #f59e0b;
+    padding: 0.75rem 1rem;
+  }
+  .tp-list { list-style: none; padding: 0; }
+  .tp-list li {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .tp-list p { margin: 0; }
+  .tp-meta { font-size: 0.875rem; color: var(--color-text-lighter); margin-bottom: 0.375rem !important; }
+  .article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .review-title-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .article-header h1 {
+    margin: 0;
+    font-size: 1.875rem;
+  }
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+  }
+  .draft-badge {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+  }
+  .disclosure-alert {
+    background: var(--color-bg-alt);
+    padding: 0.75rem 1rem;
+    border-left: 4px solid var(--color-primary);
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+  }
+  .disclosure-alert p { margin: 0.25rem 0; }
+  .article-content {
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .other-reviews {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--color-border);
+  }
+  .other-reviews ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    list-style: none;
+    padding: 0;
+  }
+</style>

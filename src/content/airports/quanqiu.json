@@ -1,0 +1,115 @@
+{
+  "id": "quanqiu",
+  "name": "全球云",
+  "slug": "quanqiu",
+  "intro": "官网主打 BGP 智能优化，多线路智能调度，提供 Shadowsocks 等高性能协议（未宣称专线）。",
+  "fit": "大流量用户、需要不限时大包的用户",
+  "summary": "入门方案 20 元/月 120GB，商业方案 180 元/月 1500GB；不限时包最大 800GB。主打 BGP 智能优化多线路调度（非专线宣称）。",
+  "website": "https://sswdh.gcvipaff.com/#/?code=SHjBKSgm",
+  "promoLink": "https://sswdh.gcvipaff.com/#/?code=SHjBKSgm",
+  "promoCode": "zq85",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "BGP 智能优化 · 不限时轻量包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 100,
+      "yearlyPrice": null,
+      "traffic": 100,
+      "type": "one_time"
+    },
+    {
+      "name": "BGP 智能优化 · 不限时标准包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 360,
+      "yearlyPrice": null,
+      "traffic": 400,
+      "type": "one_time"
+    },
+    {
+      "name": "BGP 智能优化 · 不限时大容量包",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 700,
+      "yearlyPrice": null,
+      "traffic": 800,
+      "type": "one_time"
+    },
+    {
+      "name": "轻量版",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 99,
+      "traffic": 59,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "BGP 智能优化 · 入门方案",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 20,
+      "yearlyPrice": null,
+      "traffic": 120,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "BGP 智能优化 · 进阶方案",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 40,
+      "yearlyPrice": null,
+      "traffic": 300,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "BGP 智能优化 · 高端方案",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 100,
+      "yearlyPrice": null,
+      "traffic": 700,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "BGP 智能优化 · 商业方案",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 180,
+      "yearlyPrice": null,
+      "traffic": 1500,
+      "type": "monthly_refresh"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Shadowsocks",
+    "Clash",
+    "Shadowrocket"
+  ],
+  "tags": [
+    "BGP优化"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "BGP 多线路智能调度",
+    "多种大容量不限时包"
+  ],
+  "cons": [
+    "未独立核实稳定性",
+    "Logo：本站制作的临时标识，非官方 Logo"
+  ],
+  "reviewSlug": "quanqiu",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/quanqiu-generated.svg"
+  }
+}

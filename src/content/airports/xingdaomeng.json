@@ -1,0 +1,112 @@
+{
+  "id": "xingdaomeng",
+  "name": "星岛梦",
+  "slug": "xingdaomeng",
+  "intro": "官网宣称全 IPLC 专线、低延迟，并支持一次性购买不限时流量。",
+  "fit": "用量不固定、喜欢囤流量的用户",
+  "summary": "不限时流量包选择多（100GB / 300GB / 1TB），1TB 600 元。月付 25 元起 150GB。官网宣称全 IPLC 专线、低延迟。",
+  "website": "https://kfccbb.xingdaomeng.com/#/?code=0YcwWgSw",
+  "promoLink": "https://kfccbb.xingdaomeng.com/#/?code=0YcwWgSw",
+  "promoCode": "nmw888",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "星岛梦 · 贴心小包",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 96,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星岛梦 · 超量150G",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 25,
+      "yearlyPrice": null,
+      "traffic": 150,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星岛梦 · 进阶300G",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 50,
+      "yearlyPrice": null,
+      "traffic": 300,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星岛梦 · 闪光500G",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 70,
+      "yearlyPrice": null,
+      "traffic": 500,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星岛梦 · 旗舰1T版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 130,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "星岛梦 · 永久不限时100",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 100,
+      "yearlyPrice": null,
+      "traffic": 100,
+      "type": "one_time"
+    },
+    {
+      "name": "星岛梦 · 永久不限时300",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 300,
+      "yearlyPrice": null,
+      "traffic": 300,
+      "type": "one_time"
+    },
+    {
+      "name": "星岛梦 · 永久不限时1TB",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 600,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "丰富的流量包选项"
+  ],
+  "cons": [
+    "未独立核实稳定性"
+  ],
+  "reviewSlug": "xingdaomeng",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/xingdaomeng-logo.png"
+  }
+}

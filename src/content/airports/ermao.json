@@ -1,0 +1,92 @@
+{
+  "id": "ermao",
+  "name": "二猫云",
+  "slug": "ermao",
+  "intro": "官网宣称提供 IEPL 专线节点，不限速、不限设备，可解锁流媒体。",
+  "fit": "入门用户、预算 20 元左右",
+  "summary": "白猫套餐 20 元/月 130GB，入门门槛低；99 元不限时 100GB 适合低频使用。官网宣称 IEPL 专线、不限速不限设备。",
+  "website": "https://wzjc.2maoyunaff.cc/#/?code=bvsFDmSt",
+  "promoLink": "https://wzjc.2maoyunaff.cc/#/?code=bvsFDmSt",
+  "promoCode": "ermao888",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "二猫云 · 不限时套餐",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 99,
+      "yearlyPrice": null,
+      "traffic": 100,
+      "type": "one_time"
+    },
+    {
+      "name": "二猫年付小包",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 89,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "二猫云 · 白猫套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 20,
+      "yearlyPrice": null,
+      "traffic": 130,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "二猫云 · 橘猫畅玩版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 40,
+      "yearlyPrice": null,
+      "traffic": 230,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "二猫云 · 牛奶猫尊享版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 80,
+      "yearlyPrice": null,
+      "traffic": 430,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "二猫云 · 黑猫重度用户版",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 160,
+      "yearlyPrice": null,
+      "traffic": 850,
+      "type": "monthly_refresh"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "资料宣称 IEPL 专线"
+  ],
+  "cons": [],
+  "reviewSlug": "ermao",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/ermaoyun-logo.png"
+  }
+}

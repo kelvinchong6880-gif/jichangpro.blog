@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getAirports, getPlanStats } from '../../utils/data';
+import { siteConfig } from '../../config';
+import FaqList from '../../components/FaqList.astro';
+import { faqPage, graph, type Faq } from '../../utils/schema';
+
+const allAirports = await getAirports();
+const cheapAirports = allAirports.filter(a => a.tags.includes('便宜'));
+const year = siteConfig.lastUpdated.slice(0, 4);
+
+const rows = cheapAirports.map(a => ({ a, s: getPlanStats(a) }));
+// 列表保持编辑推荐顺序；cheapest 仅用于常见问题中的“最低价”回答
+const byMonthly = rows.filter(r => r.s.minMonthly !== null);
+const byYearly = rows.filter(r => r.s.minYearlySmall);
+const byOneTime = rows.filter(r => r.s.minOneTime);
+const cheapest = [...byMonthly].sort((x, y) => x.s.minMonthly! - y.s.minMonthly! || y.s.entryTraffic! - x.s.entryTraffic!)[0];
+
+const faqs: Faq[] = [
+  { q: '最便宜的机场多少钱一个月？', a: cheapest ? `本站收录品牌中，月付最低的是${cheapest.a.name}，¥${cheapest.s.minMonthly}/月（${cheapest.s.entryTraffic}GB）。如果接受年付，年付小包折合每月不到 10 元。` : '请查看下方对比表。' },
+  { q: '便宜机场会不会很卡？', a: '价格低不等于质量差。月付 20–25 元档的机场多数宣称专线或中转线路，日常使用足够。需要警惕的是月付几元却承诺“全专线不限量”的机场，以及没有月付选项、只能年付的陌生机场。' },
+  { q: '年付小包划算吗？', a: '如果每月用量稳定在 50GB 左右且确定长期使用，年付小包很划算（约 84–99 元/年）。但需要一次性付款，机场停运时剩余费用难以追回，建议先用一个月月付确认质量。' },
+];
+
+const schema = graph(faqPage(faqs));
+---
+
+<Layout
+  title={`便宜机场推荐${year}：月付 25 元以内、年付小包与不限时套餐对比 | 机场 Pro`}
+  description={`${year}年便宜机场推荐：对比月付 18–25 元档、年付小包（折合每月不到 10 元）和不限时流量包，教你避开“折合月付”低价陷阱。`}
+  schema={schema}
+>
+  <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '便宜机场推荐' }]} />
+
+  <div class="prose">
+    <h1>{year}年便宜机场推荐</h1>
+    <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
+    <p>本页的“便宜机场”指<strong>真实月付在 25 元以内</strong>，或提供年付小包、低价不限时流量包的机场。比较便宜套餐时，要同时看实际支付金额、付款周期、流量、倍率和设备数——价格低本身不代表速度差，但“折合每月几块钱”的宣传往往需要一次付一年。</p>
+
+    <h2>各品牌真实月付起价</h2>
+    <div class="table-scroll">
+      <table>
+      <thead>
+        <tr>
+          <th>品牌</th>
+          <th>真实月付起价</th>
+          <th>每月流量</th>
+          <th>每 GB 约价</th>
+        </tr>
+      </thead>
+      <tbody>
+        {byMonthly.map(r => (
+          <tr>
+            <td><strong><a href={`/reviews/${r.a.reviewSlug}/`}>{r.a.name}</a></strong></td>
+            <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minMonthly}/月</td>
+            <td>{r.s.entryTraffic}GB</td>
+            <td style="color: var(--color-text-lighter);">约 ¥{r.s.entryPerGb?.toFixed(2)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </div>
+
+    <h2>年付小包：折合每月不到 10 元</h2>
+    <div class="table-scroll">
+      <table>
+      <thead>
+        <tr>
+          <th>品牌</th>
+          <th>年付总价 (需一次付清)</th>
+          <th>每月流量</th>
+          <th>折合月价</th>
+        </tr>
+      </thead>
+      <tbody>
+        {byYearly.map(r => (
+          <tr>
+            <td><strong><a href={`/reviews/${r.a.reviewSlug}/`}>{r.a.name}</a></strong></td>
+            <td>¥{r.s.minYearlySmall?.price}/年</td>
+            <td>{r.s.minYearlySmall?.traffic}GB</td>
+            <td style="color: var(--color-primary); font-weight: bold;">约 ¥{(r.s.minYearlySmall!.price / 12).toFixed(1)}/月</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </div>
+
+    <h2>不限时流量包：用完为止，不怕浪费</h2>
+    <div class="table-scroll">
+      <table>
+      <thead>
+        <tr>
+          <th>品牌</th>
+          <th>一次性价格</th>
+          <th>包含总流量</th>
+          <th>有效期</th>
+        </tr>
+      </thead>
+      <tbody>
+        {byOneTime.map(r => (
+          <tr>
+            <td><strong><a href={`/reviews/${r.a.reviewSlug}/`}>{r.a.name}</a></strong></td>
+            <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minOneTime?.price}</td>
+            <td>{r.s.minOneTime?.traffic}GB</td>
+            <td style="color: var(--color-text-lighter);">用完即止 (不过期)</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </div>
+
+    <h2>看懂便宜机场的三个价格陷阱</h2>
+    <ul>
+      <li><strong>真实月付 vs 折合月付：</strong>“每月只要 8 元”通常是 98 元年付小包折算而来。不想承担停运风险，请看“真实月付起价”。</li>
+      <li><strong>流量够不够用：</strong>只查资料、偶尔上 Google，50GB 就够；经常看 4K 视频，入门套餐的流量可能半个月就用完。</li>
+      <li><strong>倍率：</strong>如果常用节点是 1.5 倍或 2 倍，实际可用流量会相应减少。详见 <a href="/tutorials/understand-pricing-plans/">如何看懂机场套餐</a>。</li>
+    </ul>
+
+    <h2>便宜机场完整对比表</h2>
+  </div>
+
+  <ComparisonTable airports={cheapAirports} />
+
+  <div class="prose">
+    <FaqList faqs={faqs} />
+    <p>其他分类：<a href="/">机场推荐总榜</a> · <a href="/stable/">稳定机场推荐</a> · <a href="/value/">性价比机场推荐</a></p>
+  </div>
+</Layout>
+

@@ -1,0 +1,95 @@
+{
+  "id": "jilian",
+  "name": "极连云",
+  "slug": "jilian",
+  "intro": "官网宣称全 IPLC 专线，最高可达 2.5Gbps，不限制客户端数量。",
+  "fit": "预算最低、轻中度使用的用户",
+  "summary": "基础套餐 18 元/月 100GB，是本站收录品牌中月付起价最低的一家；价格层级丰富。官网宣称全 IPLC 专线、最高 2.5Gbps。",
+  "website": "https://reuire23oure.jilianat.homes/#/?code=N0n7rZyp",
+  "promoLink": "https://reuire23oure.jilianat.homes/#/?code=N0n7rZyp",
+  "promoCode": "ji8888",
+  "promoCodeNote": "优惠幅度及适用套餐以结算页为准",
+  "plans": [
+    {
+      "name": "限时年付套餐体验",
+      "currency": "CNY",
+      "cycle": "年付",
+      "price": null,
+      "yearlyPrice": 96,
+      "traffic": 60,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极连云 · 基础套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 18,
+      "yearlyPrice": null,
+      "traffic": 100,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极连云 · 进阶套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 32,
+      "yearlyPrice": null,
+      "traffic": 200,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极连云 · 旗舰套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 61,
+      "yearlyPrice": null,
+      "traffic": 500,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极连云 · 尊享套餐",
+      "currency": "CNY",
+      "cycle": "月付",
+      "price": 122,
+      "yearlyPrice": null,
+      "traffic": 1000,
+      "type": "monthly_refresh"
+    },
+    {
+      "name": "极连云 · 不限时套餐",
+      "currency": "CNY",
+      "cycle": "一次性",
+      "price": 399,
+      "yearlyPrice": null,
+      "traffic": 600,
+      "type": "one_time"
+    }
+  ],
+  "deviceLimit": null,
+  "clients": [
+    "Clash",
+    "Shadowrocket",
+    "v2rayN"
+  ],
+  "tags": [
+    "专线"
+  ],
+  "dataSource": "用户资料导入",
+  "priceCheckDate": "2026-10-02",
+  "testStatus": "untested",
+  "testDateRange": null,
+  "testMethod": null,
+  "testEvidence": null,
+  "pros": [
+    "价格层级丰富"
+  ],
+  "cons": [
+    "未独立核实稳定性"
+  ],
+  "reviewSlug": "jilian",
+  "showStatus": true,
+  "isDemo": false,
+  "logo": {
+    "square": "/images/logos/jilianyun-logo.png"
+  }
+}

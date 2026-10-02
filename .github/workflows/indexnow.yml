@@ -1,0 +1,33 @@
+name: IndexNow Submission
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro site
+        run: npm run build
+
+      - name: Wait for Cloudflare Pages deployment
+        # Give Cloudflare Pages time to deploy the actual files to edge nodes
+        # so when Bing comes to check the key, it's already live.
+        run: sleep 60
+
+      - name: Submit URLs to IndexNow
+        run: node scripts/submit-indexnow.mjs

@@ -4,7 +4,7 @@ description: "TUN 模式通过创建虚拟网卡接管电脑的全部网络流�
 category: "客户端设置"
 tags: ["TUN 模式", "系统代理", "虚拟网卡", "Clash", "v2rayN"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["clash-verge-rev-guide", "global-vs-rule-mode", "dns-leak-test"]
 author: "机场 Pro 编辑部"
@@ -49,4 +49,4 @@ author: "机场 Pro 编辑部"
 
 **公司电脑能开吗？** 公司电脑通常有管理软件和内网 VPN，开 TUN 可能影响内网访问，请遵守公司规定。
 
-相关阅读：[DNS 泄漏怎么检测](/tutorials/dns-leak-test/) ｜ [2026 机场推荐](/)
+相关阅读：[DNS 泄漏怎么检测](/tutorials/dns-leak-test/) ｜ [机场综合对比表](/compare/)

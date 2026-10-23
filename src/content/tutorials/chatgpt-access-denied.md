@@ -4,7 +4,7 @@ description: "开了代理仍提示 ChatGPT 不可用、Claude 不支持所在�
 category: "常见问题"
 tags: ["ChatGPT", "Claude", "AI", "地区限制", "IP 风控"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["dns-leak-test", "netflix-proxy-detected", "global-vs-rule-mode"]
 author: "机场 Pro 编辑部"
@@ -46,6 +46,6 @@ ChatGPT、Claude 等服务**不支持中国大陆和香港**等地区，详见�
 
 ## 选机场时怎么判断 AI 可用性？
 
-几乎所有机场都宣称“解锁 ChatGPT”，但实际情况会随时间变化。本站评测中会把官网宣称和第三方测试结果分开标注，建议购买月付后自己验证。可参考 [2026 机场推荐](/) 中各家的评测。
+几乎所有机场都宣称“解锁 ChatGPT”，但实际情况会随时间变化。本站评测中会把官网宣称和第三方测试结果分开标注，建议购买月付后自己验证。可参考 [全部机场评测](/reviews/) 中各家的详细说明。
 
 相关阅读：[Netflix 提示使用代理怎么办](/tutorials/netflix-proxy-detected/) ｜ [DNS 泄漏检测](/tutorials/dns-leak-test/)

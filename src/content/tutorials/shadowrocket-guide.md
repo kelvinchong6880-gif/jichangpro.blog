@@ -4,7 +4,7 @@ description: "Shadowrocket（小火箭）是 iPhone / iPad 上最常用的代理
 category: "客户端设置"
 tags: ["Shadowrocket", "小火箭", "iOS", "iPhone", "客户端教程"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["global-vs-rule-mode", "update-subscription-error", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -63,4 +63,4 @@ Shadowrocket 在中国大陆区 App Store 已下架，需要使用**其他地区
 ## 相关阅读
 
 - 电脑端：[Clash Verge Rev 使用教程](/tutorials/clash-verge-rev-guide/)
-- 还没买机场？看看 [2026 机场推荐](/)
+- 还没买机场？看看 [机场综合对比表](/compare/)

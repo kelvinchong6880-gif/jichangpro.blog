@@ -4,7 +4,7 @@ description: "机场套餐怎么选才不吃亏？本文讲清月付、季付、
 category: "选择与套餐理解"
 tags: ["套餐", "月付", "年付", "不限时", "流量倍率"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["how-to-choose", "what-is-jichang", "iplc-iepl-difference"]
 author: "机场 Pro 编辑部"
@@ -72,5 +72,4 @@ author: "机场 Pro 编辑部"
 ## 相关阅读
 
 - [如何选择机场：完整选购指南](/tutorials/how-to-choose/)
-- [便宜机场推荐](/cheap/) ｜ [性价比机场推荐](/value/)
-- [2026 机场推荐与对比](/)
+- [机场综合对比表](/compare/)

@@ -4,7 +4,7 @@ description: "机场月付套餐的流量什么时候重置？按购买日还是
 category: "选择与套餐理解"
 tags: ["流量重置", "流量倍率", "流量用完", "套餐"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["understand-pricing-plans", "one-time-plan-explain", "device-limit-explain"]
 author: "机场 Pro 编辑部"
@@ -51,4 +51,4 @@ author: "机场 Pro 编辑部"
 - 视频清晰度按需选择，手机看 1080p 足够；
 - 关闭不需要的后台同步（网盘、系统更新走代理会大量耗流量）。
 
-相关阅读：[如何看懂机场套餐](/tutorials/understand-pricing-plans/) ｜ [2026 机场推荐](/)
+相关阅读：[如何看懂机场套餐](/tutorials/understand-pricing-plans/) ｜ [机场综合对比表](/compare/)

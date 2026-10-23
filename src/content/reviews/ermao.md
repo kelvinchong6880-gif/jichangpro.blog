@@ -3,7 +3,7 @@ title: "二猫云评测2026：套餐价格、线路与优缺点分析"
 description: "二猫云怎么样？本文整理二猫云全部套餐价格（月付 ¥20 起，130GB/月）、年付小包与不限时流量包，按用量给出选购建议，并与同价位机场对比，附优惠码 ermao888。"
 serviceId: "ermao"
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 author: "机场 Pro 编辑部"
 thirdParty:

@@ -4,7 +4,7 @@ description: "直连是本地直接连接海外服务器，中转是先连国内
 category: "线路与协议"
 tags: ["直连", "中转", "线路", "机场稳定性"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["iplc-iepl-difference", "how-to-choose", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -39,4 +39,4 @@ author: "机场 Pro 编辑部"
 - **日常看视频、用 AI 工具**：选中转机场，月付 20–25 元档足够。
 - **工作刚需、外贸、视频会议**：选宣称 IPLC/IEPL 专线的机场，并先月付实测。
 
-相关阅读：[IPLC 和 IEPL 的区别](/tutorials/iplc-iepl-difference/) ｜ [稳定机场推荐](/stable/) ｜ [2026 机场推荐](/)
+相关阅读：[IPLC 和 IEPL 的区别](/tutorials/iplc-iepl-difference/) ｜ [机场综合对比表](/compare/)

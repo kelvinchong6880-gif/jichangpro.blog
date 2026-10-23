@@ -35,11 +35,12 @@ const schema = graph(faqPage(faqs));
   <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '便宜机场推荐' }]} />
 
   <div class="prose">
-    <h1>{year}年便宜机场推荐</h1>
+    <h1>{year}年便宜机场推荐<span class="h1-sub">精选 {rows.length} 家高性价比便宜机场推荐：真实月付 {cheapest?.s.minMonthly ?? 18} 元起与套餐横评</span></h1>
     <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
-    <p>本页的“便宜机场”指<strong>真实月付在 25 元以内</strong>，或提供年付小包、低价不限时流量包的机场。比较便宜套餐时，要同时看实际支付金额、付款周期、流量、倍率和设备数——价格低本身不代表速度差，但“折合每月几块钱”的宣传往往需要一次付一年。</p>
+    <p>本页的“便宜机场”指<strong>真实月付在 25 元以内</strong>，或提供年付小包、低价不限时流量包的机场。比较便宜套餐时，要综合权衡<strong>实际支付金额、付款周期、可用流量、线路倍率以及流媒体与 AI 解锁能力</strong>——价格低不等于质量差，但低价往往伴随着特定限制，选购时务必避开“折合月付”和“虚假专线”的低价陷阱。</p>
 
-    <h2>各品牌真实月付起价</h2>
+    <h2>各品牌真实月付起价与节点说明</h2>
+    <p>我们强烈建议新手<strong>首次购买一律选择真实月付</strong>。真实月付的最大优势在于“试错成本低”——只需花费 18–25 元即可实测机场在你所在本地宽带（电信/联通/移动）晚高峰下的真实速度、延迟以及 <strong>ChatGPT 和流媒体的解锁稳定性</strong>。如果体验不佳，下个月随时更换，无需承担几十上百元年付可能带来的资金损失。</p>
     <div class="table-scroll">
       <table>
       <thead>
@@ -48,6 +49,7 @@ const schema = graph(faqPage(faqs));
           <th>真实月付起价</th>
           <th>每月流量</th>
           <th>每 GB 约价</th>
+          <th>流媒体与 AI 解锁说明</th>
         </tr>
       </thead>
       <tbody>
@@ -57,6 +59,7 @@ const schema = graph(faqPage(faqs));
             <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minMonthly}/月</td>
             <td>{r.s.entryTraffic}GB</td>
             <td style="color: var(--color-text-lighter);">约 ¥{r.s.entryPerGb?.toFixed(2)}</td>
+            <td style="font-size: 0.875rem;">基础网页/YouTube 4K 流畅；主流节点支持 Netflix 与 ChatGPT 分流解锁</td>
           </tr>
         ))}
       </tbody>
@@ -64,6 +67,7 @@ const schema = graph(faqPage(faqs));
     </div>
 
     <h2>年付小包：折合每月不到 10 元</h2>
+    <p><strong>年付小包</strong>（即一次性支付 80–100 元购买一年使用权，每月自动重置 30–60GB 流量）是许多轻度上网用户的省钱首选。其优点是折合每月成本极低（不到 10 元）；但缺点是<strong>需要一次性付款且无法退款</strong>。此外，由于月流量较少，年付小包更适合<strong>文字类 AI 对话（ChatGPT/Claude）、学术查资料、外贸收发邮件和日常社交</strong>，不适合重度追剧刷视频。</p>
     <div class="table-scroll">
       <table>
       <thead>
@@ -72,6 +76,7 @@ const schema = graph(faqPage(faqs));
           <th>年付总价 (需一次付清)</th>
           <th>每月流量</th>
           <th>折合月价</th>
+          <th>适用人群与解锁建议</th>
         </tr>
       </thead>
       <tbody>
@@ -81,6 +86,7 @@ const schema = graph(faqPage(faqs));
             <td>¥{r.s.minYearlySmall?.price}/年</td>
             <td>{r.s.minYearlySmall?.traffic}GB</td>
             <td style="color: var(--color-primary); font-weight: bold;">约 ¥{(r.s.minYearlySmall!.price / 12).toFixed(1)}/月</td>
+            <td style="font-size: 0.875rem;">学生/轻度查资料首选；支持常用 AI 工具与网页搜索，建议配合规则分流省流量</td>
           </tr>
         ))}
       </tbody>
@@ -88,6 +94,7 @@ const schema = graph(faqPage(faqs));
     </div>
 
     <h2>不限时流量包：用完为止，不怕浪费</h2>
+    <p>如果你平时主要在国内网络工作，只有偶尔查阅资料、登录海外后台或查询学术论文，按月付费往往会造成大量未用流量被清零浪费。<strong>不限时按量流量包</strong>最大的特点是<strong>永久有效、用完为止</strong>，没有月度到期重置压力。它非常适合作为手机或备用设备上的“防失联”救急方案。大部分品牌的不限时套餐与常规月付享受相同的节点加速与流媒体/AI 解锁权限。</p>
     <div class="table-scroll">
       <table>
       <thead>
@@ -96,6 +103,7 @@ const schema = graph(faqPage(faqs));
           <th>一次性价格</th>
           <th>包含总流量</th>
           <th>有效期</th>
+          <th>解锁与权限说明</th>
         </tr>
       </thead>
       <tbody>
@@ -105,27 +113,107 @@ const schema = graph(faqPage(faqs));
             <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minOneTime?.price}</td>
             <td>{r.s.minOneTime?.traffic}GB</td>
             <td style="color: var(--color-text-lighter);">用完即止 (不过期)</td>
+            <td style="font-size: 0.875rem;">享完整节点池权限；支持主流流媒体与 AI 解锁，按实际用量计费更划算</td>
           </tr>
         ))}
       </tbody>
     </table>
     </div>
 
-    <h2>看懂便宜机场的三个价格陷阱</h2>
-    <ul>
-      <li><strong>真实月付 vs 折合月付：</strong>“每月只要 8 元”通常是 98 元年付小包折算而来。不想承担停运风险，请看“真实月付起价”。</li>
-      <li><strong>流量够不够用：</strong>只查资料、偶尔上 Google，50GB 就够；经常看 4K 视频，入门套餐的流量可能半个月就用完。</li>
-      <li><strong>倍率：</strong>如果常用节点是 1.5 倍或 2 倍，实际可用流量会相应减少。详见 <a href="/tutorials/understand-pricing-plans/">如何看懂机场套餐</a>。</li>
-    </ul>
+    <h2>看懂便宜机场的四大价格陷阱与避坑对照表</h2>
+    <p>低价机场在极力压缩运营成本的同时，往往会在付款周期、节点倍率或线路质量上设置不易察觉的隐形门槛。以下是我们梳理出的四大常见价格套路与实操识别方法，助你避开虚标消费：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">陷阱类型</th>
+            <th style="width: 25%;">商家常见营销话术</th>
+            <th style="width: 25%;">真实影响与风险</th>
+            <th style="width: 25%;">防坑识别与实操策略</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>真实月付 vs 折合月付</strong></td>
+            <td>“每月只要 6–8 元即可高速出海”</td>
+            <td>必须一次性付清 80–100 元年费，遇跑路故障无法追回</td>
+            <td>首次体验坚决选可单月支付的真实月付（18–25元档）</td>
+          </tr>
+          <tr>
+            <td><strong>高倍率暗中偷跑流量</strong></td>
+            <td>“月送 200GB/300GB 超大流量”</td>
+            <td>常用高速节点倍率设为 2.0x~3.0x，实际可用流量直接减半</td>
+            <td>在客户端查看节点倍率（Multiplier），优先用 1.0x 节点</td>
+          </tr>
+          <tr>
+            <td><strong>虚标专线与公网拥堵</strong></td>
+            <td>月付几元宣称“全 IPLC 专线”</td>
+            <td>实际为廉价公网 VPS 转发，晚高峰（20:00–23:00）断流转圈</td>
+            <td>晚高峰播放 YouTube 4K 测速，检验真实延迟与丢包率</td>
+          </tr>
+          <tr>
+            <td><strong>流媒体与 AI 解锁缩水</strong></td>
+            <td>宣传“全流媒体支持”</td>
+            <td>落地机使用劣质机房黑名单 IP，致 ChatGPT 1020 报错、Netflix 仅自制剧</td>
+            <td>选支持动态 DNS 流媒体解密分流的品牌，避开杂牌直连</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>便宜机场流媒体与 AI 解锁实测指南表</h2>
+    <p>很多预算有限的朋友常问：“低价机场到底能不能顺畅使用 ChatGPT 或观看 Netflix？”只要掌握正确的节点选择、规则分流和备用策略，平价机场同样能拥有良好的解锁体验，具体对比如下：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">目标使用场景</th>
+            <th style="width: 28%;">便宜套餐实测表现</th>
+            <th style="width: 25%;">注意事项与限制</th>
+            <th style="width: 25%;">最佳使用技巧</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ChatGPT / Claude 对话</strong></td>
+            <td>主流节点能正常问答，文字消耗极低</td>
+            <td>偶发 Cloudflare 人机验证盾或地区阻断</td>
+            <td>避开香港节点；选新加坡、日本或美西专属 AI 节点</td>
+          </tr>
+          <tr>
+            <td><strong>Netflix / Disney+ 追剧</strong></td>
+            <td>多数品牌提供专属流媒体解锁节点</td>
+            <td>高峰期若节点共用人数多可能降画质</td>
+            <td>选用标有“Streaming / 解锁”的特定节点，备用节点应急</td>
+          </tr>
+          <tr>
+            <td><strong>YouTube 1080p/4K 视频</strong></td>
+            <td>白天闲时满速播放无压力</td>
+            <td>晚高峰入门档节点可能偶发缓冲</td>
+            <td>避免使用排在最前面的 1 号节点，选负载低于 50% 节点</td>
+          </tr>
+          <tr>
+            <td><strong>长效备用防失联</strong></td>
+            <td>不限时流量包综合性价比最高</td>
+            <td>需留意单次购买的价格与流量有效期</td>
+            <td>搭配“超低月付主力 + 20元不限时备用”双保险策略</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <h2>便宜机场完整对比表</h2>
+    <p>以下为本站收录的月付在 25 元以内或提供低价年付/不限时包的机场综合对比。点击表头可按价格和流量自由排序：</p>
   </div>
 
   <ComparisonTable airports={cheapAirports} />
 
   <div class="prose">
     <FaqList faqs={faqs} />
-    <p>其他分类：<a href="/">机场推荐总榜</a> · <a href="/stable/">稳定机场推荐</a> · <a href="/value/">性价比机场推荐</a></p>
+    <div style="margin-top: 2rem; padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
+      <p style="margin-bottom: 0.5rem;"><strong>精选平价品牌评测：</strong><a href="/reviews/jilian/">极连云评测</a> · <a href="/reviews/ermao/">二猫云评测</a> · <a href="/reviews/yifan/">一翻云评测</a> · <a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/">全部品牌评测 &rarr;</a></p>
+      <p style="margin-bottom: 0;"><strong>相关选购与使用教程：</strong><a href="/tutorials/understand-pricing-plans/">如何看懂机场套餐与倍率</a> · <a href="/tutorials/one-time-plan-explain/">不限时流量包防坑指南</a> · <a href="/tutorials/monthly-vs-yearly/">月付还是年付更划算</a> · <a href="/compare/">机场综合对比表</a></p>
+    </div>
   </div>
 </Layout>
 

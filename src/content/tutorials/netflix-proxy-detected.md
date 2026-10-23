@@ -4,7 +4,7 @@ description: "用机场看 Netflix、Disney+ 出现代理错误、只能看自�
 category: "常见问题"
 tags: ["Netflix", "流媒体解锁", "Disney+", "代理检测"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["chatgpt-access-denied", "dns-leak-test", "traffic-reset-rule"]
 author: "机场 Pro 编辑部"
@@ -52,6 +52,6 @@ DNS 解析到了错误地区，或 IPv6 流量没有走代理，也会导致解�
 
 ## 选机场时的建议
 
-需要稳定看 Netflix、Disney+ 的用户，购买前可以先看评测中的解锁信息，并买月付实测。本站评测会分别列出官网宣称和第三方测试结果，见 [2026 机场推荐](/)。
+需要稳定看 Netflix、Disney+ 的用户，购买前可以先看评测中的解锁信息，并买月付实测。本站评测会分别列出官网宣称和第三方测试结果，见 [全部机场评测](/reviews/)。
 
-相关阅读：[ChatGPT 打不开怎么办](/tutorials/chatgpt-access-denied/) ｜ [稳定机场推荐](/stable/)
+相关阅读：[ChatGPT 打不开怎么办](/tutorials/chatgpt-access-denied/) ｜ [机场综合对比表](/compare/)

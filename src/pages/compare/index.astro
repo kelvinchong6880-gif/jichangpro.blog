@@ -3,22 +3,185 @@ import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ComparisonTable from '../../components/ComparisonTable.astro';
 import { getAirports } from '../../utils/data';
+import { siteConfig } from '../../config';
+import FaqList from '../../components/FaqList.astro';
+import { faqPage, graph, type Faq } from '../../utils/schema';
 
 const airports = await getAirports();
+const year = siteConfig.lastUpdated.slice(0, 4);
+
+const faqs: Faq[] = [
+  { q: '对比表中各家机场的价格多长时间核对一次？', a: '本站编辑部每月初对所有收录品牌的官网在售套餐、优惠码与线路规格进行人工复核，并在页面及表格中更新最新核对日期。' },
+  { q: '什么是“真实月付起价”？为什么有的机场显示没有月付？', a: '“真实月付起价”指的是用户可以只支付一个月费用的最低套餐（如 18–25 元）。部分机场为了提高客单价只提供季付、半年付或年付，没有按月付款选项，本站会在对比表中明确标注并提醒风险。' },
+  { q: '对比表中的“专线”代表什么？所有专线都能解锁流媒体吗？', a: '“专线”通常指 IPLC 或 IEPL 跨境内网私有线路，具备晚高峰不拥堵、丢包率极低的特点。绝大多数专线机场都配备了原生 IP 或 DNS 解锁服务，支持 Netflix 4K 全区和 ChatGPT 正常访问，但在晚高峰高负荷时仍建议使用专属流媒体/AI 节点。' },
+  { q: '表格中的“未知”项是怎么回事？', a: '如果某品牌官网未明确公示特定参数（例如未标明最大设备连接数或没有公开年付套餐），我们坚持客观原则统一标注“未知”，绝不凭空推断或虚构数据。在表格按列排序时，这些“未知”项会自动排在末尾。' },
+];
+
+const schema = graph(faqPage(faqs));
 ---
 
 <Layout 
-  title="机场综合对比表2026：9家翻墙机场价格、流量与套餐对比 | 机场 Pro" 
-  description="一张表对比 9 家翻墙机场的月付起价、年付价格、月流量、不限时套餐与优惠码，支持按价格和流量排序筛选，每月核对官网价格。"
+  title={`机场综合对比表${year}：${airports.length}家翻墙机场价格、流量与套餐对比 | 机场 Pro`} 
+  description="一张表对比全网 9 家翻墙机场的月付起价、年付价格、月流量、不限时套餐、专线类型与优惠码，附流媒体与 AI 解锁能力深度说明，支持表头一键排序筛选。"
+  schema={schema}
 >
   <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '机场综合对比表' }]} />
   
   <div class="prose" style="max-width: 100%;">
-    <h1>机场综合对比表</h1>
-    <p>在这个页面，你可以查看本站收录的所有机场数据的详细对比。默认提供基础的价格、流量和设备数比较。点击表头即可对对应列进行排序（降序或升序）。</p>
-    <p><strong>注意：</strong>如果某项数据（如流量、设备数）显示为“未知”，则表示官网没有明确标注或我们暂时无法确认。在排序时，这些“未知”项会自动排在最后，避免干扰你寻找明确的数据。</p>
+    <h1>机场综合对比表<span class="h1-sub">全网 {airports.length} 家主流翻墙机场综合对比表：价格、流量与线路类型一览</span></h1>
+    <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time> · 价格每月核对 · 编辑：机场 Pro 编辑部</p>
+    <p>在这个页面，你可以集中查阅本站收录的 <strong>{airports.length} 家主流翻墙机场</strong>的全面核心参数。我们拒绝单一维度的粗糙排序，将各家机场的<strong>真实月付起价、年付小包价格、单月流量上限、不限时流量包、线路类型（IPLC 专线/BGP 中转）以及设备数限制</strong>统一整理为横向对比矩阵。点击表头即可按任意列升降序排列，帮你在几分钟内快速对齐各家优劣势。</p>
+
+    <h2>对比表 6 项核心指标解读速查表</h2>
+    <p>在横向对比不同机场服务商时，不能只看单一的价格高低或宣传口号。我们对综合对比表中的 6 项核心指标进行了系统拆解，帮助你在查阅大表前快速建立清晰的判断逻辑：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">指标名称</th>
+            <th style="width: 30%;">参数具体含义</th>
+            <th style="width: 25%;">选购重点考量点</th>
+            <th style="width: 25%;">实操与避坑建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>真实月付起价</strong></td>
+            <td>用户单次仅支付 1 个月费用的最低门槛</td>
+            <td>低试错成本，验证所在宽带晚高峰实际表现</td>
+            <td>新手首选月付（18–25元档），切勿直接年付</td>
+          </tr>
+          <tr>
+            <td><strong>每月可用流量</strong></td>
+            <td>单月计费周期内可消耗的数据流量总额</td>
+            <td>留意节点倍率（1x/1.5x/2x 实际扣除量不同）</td>
+            <td>查资料选 50G，日常 150G，追剧 4K 选 300G+</td>
+          </tr>
+          <tr>
+            <td><strong>年付特惠小包</strong></td>
+            <td>一次性付清一年费用，每月自动重置配额</td>
+            <td>总体支出极低（约 80–100 元/年），但不可退款</td>
+            <td>适合轻度文字查询、外贸邮件及极简出海用户</td>
+          </tr>
+          <tr>
+            <td><strong>不限时流量包</strong></td>
+            <td>流量无月度重置到期日，直至耗尽为止</td>
+            <td>零闲置浪费，全节点池通常享受相同加速权限</td>
+            <td>适合作为手机端备用梯子或主力断网时应急防失联</td>
+          </tr>
+          <tr>
+            <td><strong>线路类型架构</strong></td>
+            <td>IPLC / IEPL 内网专线 vs 优质 BGP 中转</td>
+            <td>专线不过防火墙公网出口，晚高峰抗波动能力强</td>
+            <td>重度办公、跨国会议与 4K 追剧强烈推荐专线</td>
+          </tr>
+          <tr>
+            <td><strong>设备连接数限制</strong></td>
+            <td>同一订阅链接支持同时在线的客户端上限</td>
+            <td>多数标明“不限”，部分限制 2–5 台设备并发</td>
+            <td>多设备并发或合租分摊前务必核对该字段</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   
   <ComparisonTable airports={airports} />
 
+  <div class="prose" style="max-width: 100%; margin-top: 3rem;">
+    <h2>主流平台流媒体与 AI 工具解锁能力对照表</h2>
+    <p>能否稳定解锁 Netflix 及 ChatGPT/Claude 等 AI 生产力工具，是衡量机场质量的关键分水岭。下表系统整理了主流海外平台的核心解锁要求、常见受限现象及推荐应对技巧：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">目标平台 / 工具</th>
+            <th style="width: 28%;">解锁核心网络要求</th>
+            <th style="width: 26%;">常见受限与报错表现</th>
+            <th style="width: 26%;">推荐节点与解决技巧</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Netflix (奈飞)</strong></td>
+            <td>当地原生住宅/机房 IP 支持</td>
+            <td>提示“检测到代理”或仅能看自制剧</td>
+            <td>选用标有解锁特性的港/台/新/日节点，切换备用线路</td>
+          </tr>
+          <tr>
+            <td><strong>ChatGPT / OpenAI</strong></td>
+            <td>高纯净度海外 IP，未进风控库</td>
+            <td>1020 报错、Access Denied、验证码死循环</td>
+            <td>绝对避开香港节点；选用美西、日本、新加坡专线节点</td>
+          </tr>
+          <tr>
+            <td><strong>Claude / Anthropic</strong></td>
+            <td>固定无频繁跳跃的原生 IP</td>
+            <td>App not available in your area 或账号遭连带封禁</td>
+            <td>使用美国或英国原生节点；固定同一节点避免频繁异地跳跃</td>
+          </tr>
+          <tr>
+            <td><strong>YouTube 4K / 8K</strong></td>
+            <td>单线程大带宽冗余，极低丢包</td>
+            <td>晚高峰自动降清晰度至 480p 或频繁转圈</td>
+            <td>选用 IPLC/IEPL 跨境专线，避开公网出口晚高峰拥堵</td>
+          </tr>
+          <tr>
+            <td><strong>Disney+ / HBO Max</strong></td>
+            <td>对应国家版权分流规则支持</td>
+            <td>Error code 或页面无法完全加载视频流</td>
+            <td>切换至台区（含繁中字幕）、美区或新加坡节点并清理缓存</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>四大使用场景快速对号入座指南表</h2>
+    <p>如果你在面对众多数据时感到难以抉择，可以直接按自己的核心出海用途对号入座。下表归纳了四类最常见用户画像的推荐套餐类型、预算范围与核心考量指标：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">目标用户画像</th>
+            <th style="width: 25%;">典型日常出海需求</th>
+            <th style="width: 28%;">推荐套餐类型与预算</th>
+            <th style="width: 27%;">选购重点考量指标</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>重度追剧影音党</strong></td>
+            <td>YouTube 4K、追 Netflix 奈飞热门剧集</td>
+            <td>中档大流量套餐（¥30–45/月，300GB+）</td>
+            <td>晚高峰带宽冗余、流媒体原生解锁节点池</td>
+          </tr>
+          <tr>
+            <td><strong>外贸跨境与 AI 办公</strong></td>
+            <td>ChatGPT-4o、跨境电商、Zoom 会议</td>
+            <td>IPLC/IEPL 稳定专线套餐（¥25–40/月）</td>
+            <td>固定纯净 IP、Jitter 抖动 < 5ms、丢包率接近 0%</td>
+          </tr>
+          <tr>
+            <td><strong>学生党与极低预算</strong></td>
+            <td>Google 学术、维基百科、偶尔看视频</td>
+            <td>真实月付入门档（¥18–20/月）或年付小包</td>
+            <td>真实月付起价、年付总成本（是否低于100元）</td>
+          </tr>
+          <tr>
+            <td><strong>偶尔出海备用群体</strong></td>
+            <td>手机备用、主力宽带断网应急防失联</td>
+            <td>不限时按量流量包（¥20–30 一次性）</td>
+            <td>永久有效不重置、享有全量专线节点加速权限</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <FaqList faqs={faqs} title="机场综合对比常见问题（FAQ）" />
+
+    <div style="margin-top: 2rem; padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
+      <p style="margin-bottom: 0.5rem;"><strong>收录品牌深度评测：</strong><a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/feimao/">飞猫云评测</a> · <a href="/reviews/guangsu/">光速云评测</a> · <a href="/reviews/jilian/">极连云评测</a> · <a href="/reviews/">全部 9 家品牌独立评测 &rarr;</a></p>
+      <p style="margin-bottom: 0;"><strong>客户端与实测教程：</strong><a href="/tutorials/clash-verge-rev-guide/">Clash Verge Rev 教程</a> · <a href="/tutorials/v2rayn-guide/">v2rayN 教程</a> · <a href="/tutorials/shadowrocket-guide/">小火箭 Shadowrocket 配置</a> · <a href="/tutorials/chatgpt-access-denied/">ChatGPT 报错解决</a> · <a href="/coupons/">机场优惠码</a></p>
+    </div>
+  </div>
 </Layout>

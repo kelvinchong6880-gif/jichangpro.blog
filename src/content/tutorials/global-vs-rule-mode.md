@@ -4,7 +4,7 @@ description: "规则模式按分流规则决定哪些网站走代理，全局模
 category: "客户端设置"
 tags: ["规则模式", "全局模式", "Clash", "分流"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["node-timeout-fix", "what-is-jichang", "how-to-choose"]
 author: "机场 Pro 编辑部"

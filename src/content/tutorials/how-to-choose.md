@@ -4,7 +4,7 @@ description: "选机场先看用途和预算，再看线路类型、真实流量
 category: "选择与套餐理解"
 tags: ["选购指南", "机场推荐", "怎么选机场"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["understand-pricing-plans", "iplc-iepl-difference", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -71,4 +71,5 @@ author: "机场 Pro 编辑部"
 
 ## 不想自己比？
 
-可以直接看本站整理的 [2026 机场推荐榜单](/)，或按需求进入：[便宜机场推荐](/cheap/)、[稳定机场推荐](/stable/)、[性价比机场推荐](/value/)。
+可以直接查阅本站整理的 [机场综合对比表](/compare/) 与 [全部机场评测](/reviews/)。
+

@@ -4,7 +4,7 @@ description: "不限时套餐（一次性流量包）是买一定流量、用完
 category: "选择与套餐理解"
 tags: ["不限时套餐", "流量包", "按量付费", "备用机场"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["monthly-vs-yearly", "understand-pricing-plans", "traffic-reset-rule"]
 author: "机场 Pro 编辑部"
@@ -53,4 +53,4 @@ author: "机场 Pro 编辑部"
 
 不限时套餐同样依赖机场长期运营。机场停运时，未用完的流量就作废了，所以不建议一次性买特别大的流量包。
 
-相关阅读：[月付还是年付](/tutorials/monthly-vs-yearly/) ｜ [流量重置规则](/tutorials/traffic-reset-rule/) ｜ [便宜机场推荐](/cheap/)
+相关阅读：[月付还是年付](/tutorials/monthly-vs-yearly/) ｜ [流量重置规则](/tutorials/traffic-reset-rule/) ｜ [机场综合对比表](/compare/)

@@ -3,7 +3,7 @@ title: "光速云评测2026：套餐价格、线路与优缺点分析"
 description: "光速云怎么样？本文整理光速云全部套餐价格（月付 ¥23 起，138GB/月）、年付小包与不限时流量包，按用量给出选购建议，并与同价位机场对比，附优惠码 AMM。"
 serviceId: "guangsu"
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 author: "机场 Pro 编辑部"
 thirdParty:

@@ -4,7 +4,7 @@ description: "IPLC 与 IEPL 都是不经过公网出境的跨境专线，区别�
 category: "线路与协议"
 tags: ["IPLC", "IEPL", "专线机场", "线路"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["direct-vs-relay", "how-to-choose", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -52,4 +52,4 @@ author: "机场 Pro 编辑部"
 
 ## 本站收录的专线机场
 
-本站收录的品牌大多在官网宣称提供 IPLC/IEPL 专线，具体可在 [稳定机场推荐](/stable/) 和 [机场综合对比表](/compare/) 中查看。请注意，“专线”均为服务商宣称，本站正在逐步补充实测数据。
+本站收录的品牌大多在官网宣称提供 IPLC/IEPL 专线，具体可在 [机场综合对比表](/compare/) 中查看。请注意，“专线”均为服务商宣称，本站正在逐步补充实测数据。

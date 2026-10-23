@@ -4,7 +4,7 @@ description: "机场订阅导入或更新时提示失败、超时、解析错误
 category: "常见问题"
 tags: ["订阅更新失败", "Clash", "v2rayN", "Shadowrocket", "故障排查"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["node-timeout-fix", "clash-verge-rev-guide", "shadowrocket-guide"]
 author: "机场 Pro 编辑部"
@@ -56,4 +56,4 @@ author: "机场 Pro 编辑部"
 
 都排查过仍然失败，向机场提交工单时附上：客户端名称与版本、报错截图、使用的网络。
 
-相关阅读：[节点全部超时怎么办](/tutorials/node-timeout-fix/) ｜ [2026 机场推荐](/)
+相关阅读：[节点全部超时怎么办](/tutorials/node-timeout-fix/) ｜ [机场综合对比表](/compare/)

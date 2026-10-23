@@ -4,7 +4,7 @@ description: "Hysteria2 和 TUIC 都是基于 QUIC（UDP）的代理协议，在
 category: "线路与协议"
 tags: ["Hysteria2", "TUIC", "QUIC", "UDP", "协议"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["shadowsocks-vs-vmess", "tun-mode-explain", "node-timeout-fix"]
 author: "机场 Pro 编辑部"

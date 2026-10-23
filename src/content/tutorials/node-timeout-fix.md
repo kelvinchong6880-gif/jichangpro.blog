@@ -4,7 +4,7 @@ description: "机场节点显示 timeout、延迟测试全红或能连上但打�
 category: "常见问题"
 tags: ["节点超时", "连不上", "故障排查", "Clash"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["global-vs-rule-mode", "direct-vs-relay", "how-to-choose"]
 author: "机场 Pro 编辑部"
@@ -56,4 +56,4 @@ VMess 等协议对时间非常敏感，**设备时间误差超过 90 秒**就可
 
 ## 如果经常超时
 
-偶尔超时是正常现象；如果**每天晚高峰都大面积超时**，说明这家机场线路质量不足，可以考虑更换。可以参考本站 [稳定机场推荐](/stable/) 或 [2026 机场推荐榜单](/)。
+偶尔超时是正常现象；如果**每天晚高峰都大面积超时**，说明这家机场线路质量不足，可以考虑更换。可以参考本站 [机场综合对比表](/compare/)。

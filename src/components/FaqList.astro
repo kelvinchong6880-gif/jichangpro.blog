@@ -6,11 +6,13 @@ interface Props {
   title?: string;
   /** 折叠式（details）或平铺式 */
   collapsible?: boolean;
+  /** 是否默认展开 */
+  defaultOpen?: boolean;
   /** 问题使用的标题级别 */
   headingLevel?: 'h3' | 'h4';
 }
 
-const { faqs, title = '常见问题', collapsible = false, headingLevel = 'h3' } = Astro.props;
+const { faqs, title = '常见问题', collapsible = false, defaultOpen = true, headingLevel = 'h3' } = Astro.props;
 const H = headingLevel;
 ---
 
@@ -18,7 +20,7 @@ const H = headingLevel;
   <section class="faq-list">
     {title && <h2>{title}</h2>}
     {faqs.map(f => collapsible ? (
-      <details class="faq-item">
+      <details class="faq-item" open={defaultOpen}>
         <summary><H class="faq-q">{f.q}</H></summary>
         <p>{f.a}</p>
       </details>

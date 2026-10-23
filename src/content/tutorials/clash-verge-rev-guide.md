@@ -4,7 +4,7 @@ description: "Clash Verge Rev 是目前 Windows 和 macOS 上最常用的 Clash 
 category: "客户端设置"
 tags: ["Clash Verge Rev", "Clash", "Windows", "macOS", "客户端教程"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["global-vs-rule-mode", "tun-mode-explain", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -66,4 +66,4 @@ author: "机场 Pro 编辑部"
 
 - [v2rayN 使用教程](/tutorials/v2rayn-guide/)：Windows 上的另一款常用客户端
 - [Shadowrocket 小火箭使用教程](/tutorials/shadowrocket-guide/)：iPhone / iPad 用户
-- 还没买机场？看看 [2026 机场推荐](/)
+- 还没买机场？看看 [机场综合对比表](/compare/)

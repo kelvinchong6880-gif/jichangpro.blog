@@ -4,7 +4,7 @@ description: "v2rayN 是 Windows 上老牌的开源代理客户端，支持 Xray
 category: "客户端设置"
 tags: ["v2rayN", "Windows", "客户端教程", "Xray"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["clash-verge-rev-guide", "shadowsocks-vs-vmess", "node-timeout-fix"]
 author: "机场 Pro 编辑部"
@@ -57,4 +57,3 @@ author: "机场 Pro 编辑部"
 ## 相关阅读
 
 - [Shadowsocks、VMess、VLESS、Trojan 有什么区别](/tutorials/shadowsocks-vs-vmess/)
-- [2026 机场推荐与对比](/)

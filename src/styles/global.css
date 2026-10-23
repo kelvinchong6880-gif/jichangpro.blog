@@ -91,6 +91,17 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: 600;
 }
 h1 { font-size: 2.25rem; font-weight: 700; }
+.h1-sub {
+	display: block;
+	font-size: 1.25rem;
+	font-weight: 500;
+	color: var(--color-primary);
+	background: linear-gradient(135deg, var(--color-primary), #0ea5e9);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	letter-spacing: 0;
+	margin-top: 0.5rem;
+}
 h2 { font-size: 1.75rem; }
 h3 { font-size: 1.35rem; }
 @media (max-width: 768px) {
@@ -191,19 +202,26 @@ img {
 .prose strong {
 	color: var(--color-text);
 }
-.prose table {
+.prose table, .content-table {
 	width: 100%;
 	border-collapse: collapse;
-	margin: 2rem 0;
+	margin: 1.5rem 0;
+	min-width: 560px;
 }
-.prose th, .prose td {
+.prose th, .prose td, .content-table th, .content-table td {
 	border: 1px solid var(--color-border);
-	padding: 0.75rem;
+	padding: 0.75rem 1rem;
 	text-align: left;
+	font-size: 0.9375rem;
+	line-height: 1.6;
 }
-.prose th {
+.prose th, .content-table th {
 	background: var(--color-bg-alt);
 	font-weight: 600;
+	color: var(--color-text);
+}
+.prose tr:hover, .content-table tr:hover {
+	background: rgba(2, 132, 199, 0.02);
 }
 
 [hidden] {

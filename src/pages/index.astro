@@ -81,7 +81,7 @@ const schema = graph(
     "@type": "WebPage",
     "@id": `${siteUrl}/#webpage`,
     "url": `${siteUrl}/`,
-    "name": `${uy}年机场推荐：${count}家翻墙机场套餐对比与排行`,
+    "name": `${uy}年机场推荐：精选${count}家翻墙机场推荐与套餐对比排行`,
     "isPartOf": { "@id": `${siteUrl}/#website` },
     "dateModified": updated,
     "inLanguage": "zh-CN"
@@ -103,17 +103,17 @@ const schema = graph(
 ---
 
 <Layout
-  title={`机场推荐${uy}：${count}家翻墙机场套餐对比与排行（每月更新）| 机场 Pro`}
+  title={`机场推荐${uy}：精选${count}家翻墙机场推荐与套餐对比排行（每月更新）| 机场 Pro`}
   description={`${uy}年最新机场推荐：整理 Sogo 云、飞猫云、光速云等 ${count} 家翻墙机场的月付价格、流量、专线线路与优惠码，附便宜/稳定/性价比分类榜单和新手选购指南，每月核对更新。`}
   schema={schema}
 >
   <section class="hero">
     <div class="hero-title-group">
       <img src="/logo.jpg" alt="机场 Pro" class="hero-logo" width="64" height="64" />
-      <h1>{uy}年机场推荐<span class="h1-sub">{count}家翻墙机场套餐对比与排行</span></h1>
+      <h1>{uy}年机场推荐<span class="h1-sub">精选 {count} 家优质翻墙机场推荐与套餐对比排行</span></h1>
     </div>
     <p class="updated-line">最后更新：<time datetime={updated}>{updated}</time> · 价格每月核对 · 编辑：机场 Pro 编辑部</p>
-    <p class="subtitle">机场 Pro 是一个专注<strong>翻墙机场推荐</strong>与对比的中文网站。我们把各家机场的月付价格、每月流量、年付小包、不限时套餐和线路类型整理成同一张表，帮你在几分钟内选到合适的科学上网服务。</p>
+    <p class="subtitle">机场 Pro 是一个专注<strong>翻墙机场推荐</strong>与多维度评测的中文独立网站。我们持续核对并整理各家机场的真实月付价格、每月流量、年付小包、不限时套餐，以及 <strong>Netflix / Disney+ 流媒体</strong>与 <strong>ChatGPT / Claude 等 AI 工具的解锁能力</strong>，帮你在几分钟内选到最适合自己的科学上网服务。</p>
 
     <div class="quick-links">
       <a href="/cheap/" class="card-link">
@@ -175,30 +175,30 @@ const schema = graph(
 
   <section class="content-section">
     <h2>按需求快速选：一张表看懂该买哪家</h2>
-    <p>如果你没时间看完整榜单，可以直接按自己的情况对号入座（数据根据各家官网套餐自动计算，价格以官网为准）：</p>
+    <p>如果你没时间看完整榜单，可以直接按自己的核心需求对号入座。无论你看重<strong>预算价格</strong>、<strong>晚高峰专线稳定性</strong>，还是 <strong>Netflix/Disney+ 流媒体追剧</strong>与 <strong>ChatGPT/Claude 生产力工具解锁</strong>，下方均给出了针对性的直达推荐：</p>
     <div class="table-scroll">
       <table class="pick-table">
         <thead>
-          <tr><th>你的情况</th><th>推荐</th><th>理由</th></tr>
+          <tr><th>你的情况</th><th>推荐</th><th>理由与解锁说明</th></tr>
         </thead>
         <tbody>
           {sogo && sogoStats && (
-            <tr><td>不想纠结，要一家全都有</td><td><a href="/reviews/sogo/">{sogo.name}</a></td><td>月付 ¥{sogoStats.minMonthly} 起，另有年付小包与 4 档不限时包，本站主推</td></tr>
+            <tr><td>不想纠结，要一家全都有</td><td><a href="/reviews/sogo/">{sogo.name}</a></td><td>月付 ¥{sogoStats.minMonthly} 起，全线 IPLC/IEPL 专线，原生支持 Netflix/Disney+ 与 ChatGPT/Claude 解锁，套餐类型最齐全</td></tr>
           )}
           {cheapest && (
-            <tr><td>预算最低，按月付</td><td><a href={`/reviews/${cheapest.a.reviewSlug}/`}>{cheapest.a.name}</a></td><td>月付 ¥{cheapest.stats.minMonthly} 起（{cheapest.stats.entryTraffic}GB/月），收录品牌中最低</td></tr>
+            <tr><td>预算最低，按月付</td><td><a href={`/reviews/${cheapest.a.reviewSlug}/`}>{cheapest.a.name}</a></td><td>月付 ¥{cheapest.stats.minMonthly} 起（{cheapest.stats.entryTraffic}GB/月），收录品牌中月付最低，支持日常基础网页与 YouTube 浏览</td></tr>
           )}
           {bestPerGb && (
-            <tr><td>入门档每 GB 最便宜</td><td><a href={`/reviews/${bestPerGb.a.reviewSlug}/`}>{bestPerGb.a.name}</a></td><td>入门月付 ¥{bestPerGb.stats.minMonthly} / {bestPerGb.stats.entryTraffic}GB，约 ¥{bestPerGb.stats.entryPerGb?.toFixed(3)}/GB</td></tr>
+            <tr><td>入门档每 GB 最便宜</td><td><a href={`/reviews/${bestPerGb.a.reviewSlug}/`}>{bestPerGb.a.name}</a></td><td>入门月付 ¥{bestPerGb.stats.minMonthly} / {bestPerGb.stats.entryTraffic}GB，约 ¥{bestPerGb.stats.entryPerGb?.toFixed(3)}/GB，适合大流量下载与高画质视频</td></tr>
           )}
           {cheapestYearly && (
-            <tr><td>用得少，愿意一次付一年</td><td><a href={`/reviews/${cheapestYearly.a.reviewSlug}/`}>{cheapestYearly.a.name}</a></td><td>年付小包 ¥{cheapestYearly.stats.minYearlySmall?.price}/年（{cheapestYearly.stats.minYearlySmall?.traffic}GB/月），折合约 ¥{(cheapestYearly.stats.minYearlySmall!.price / 12).toFixed(1)}/月</td></tr>
+            <tr><td>用得少，愿意一次付一年</td><td><a href={`/reviews/${cheapestYearly.a.reviewSlug}/`}>{cheapestYearly.a.name}</a></td><td>年付小包 ¥{cheapestYearly.stats.minYearlySmall?.price}/年（{cheapestYearly.stats.minYearlySmall?.traffic}GB/月），折合约 ¥{(cheapestYearly.stats.minYearlySmall!.price / 12).toFixed(1)}/月，适合轻量文字查询与 AI 问答</td></tr>
           )}
           {cheapestOneTime && (
-            <tr><td>偶尔用，不想按月付费</td><td><a href={`/reviews/${cheapestOneTime.a.reviewSlug}/`}>{cheapestOneTime.a.name}</a></td><td>不限时流量包 ¥{cheapestOneTime.stats.minOneTime?.price} / {cheapestOneTime.stats.minOneTime?.traffic}GB，用完为止</td></tr>
+            <tr><td>偶尔用，不想按月付费</td><td><a href={`/reviews/${cheapestOneTime.a.reviewSlug}/`}>{cheapestOneTime.a.name}</a></td><td>不限时流量包 ¥{cheapestOneTime.stats.minOneTime?.price} / {cheapestOneTime.stats.minOneTime?.traffic}GB，永久有效不重置，手机备用首选</td></tr>
           )}
           {biggest && (
-            <tr><td>重度用户，流量越多越好</td><td><a href={`/reviews/${biggest.a.reviewSlug}/`}>{biggest.a.name}</a></td><td>最高月付套餐 {biggest.stats.maxTraffic}GB/月</td></tr>
+            <tr><td>重度用户，流量越多越好</td><td><a href={`/reviews/${biggest.a.reviewSlug}/`}>{biggest.a.name}</a></td><td>最高月付套餐 {biggest.stats.maxTraffic}GB/月，多设备共享与 4K 高画质长视频无压力</td></tr>
           )}
         </tbody>
       </table>
@@ -225,6 +225,7 @@ const schema = graph(
             <div><dt>最大月流量</dt><dd>{stats.maxTraffic !== null ? `${stats.maxTraffic}GB` : '—'}</dd></div>
           </dl>
           <p class="rank-note"><strong>适合：</strong>{blurb.fit}。{blurb.note}</p>
+          <p class="rank-unlock-info" style="font-size: 0.875rem; color: var(--color-primary); margin: 0.25rem 0 0.5rem;"><strong>解锁说明：</strong>宣称支持 Netflix、Disney+ 等流媒体及 ChatGPT、Claude 等 AI 工具分流解锁。</p>
           <div class="rank-actions">
             <a href={`/reviews/${a.reviewSlug}/`} class="btn btn-secondary">{a.name}评测</a>
             {a.promoLink && <a href={a.promoLink} target="_blank" rel="sponsored noopener noreferrer" class="btn btn-primary">官网注册</a>}
@@ -242,19 +243,106 @@ const schema = graph(
   </section>
 
   <section class="content-section prose-wide">
-    <h2>怎么选机场？5 条新手选购原则</h2>
-    <ol class="guide-list">
-      <li><strong>先确定用途和流量。</strong>只查资料和用 AI 工具，每月 30–80GB 就够；每天看 YouTube 建议 100GB 以上；经常看 4K 或 Netflix 选 300GB 以上。</li>
-      <li><strong>第一次只买月付。</strong>机场行业有停运风险，月付是试错成本最低的方式。用 1–3 个月确认稳定后再考虑年付。</li>
-      <li><strong>看清“真实月付”和“折合月付”。</strong>“每月 8 元”通常是年付小包折算出来的，需要一次付 90–100 元。详见 <a href="/tutorials/understand-pricing-plans/">如何看懂机场套餐</a>。</li>
-      <li><strong>晚高峰测速才算数。</strong>晚上 8–11 点打开 YouTube 1080p/4K，看是否流畅；延迟忽高忽低、大面积超时的机场要谨慎。</li>
-      <li><strong>专线要实测验证。</strong>几乎所有机场都宣称 IPLC/IEPL，判断方法见 <a href="/tutorials/iplc-iepl-difference/">IPLC 和 IEPL 专线有什么区别</a>。</li>
-    </ol>
-    <p>完整步骤请看：<a href="/tutorials/how-to-choose/">如何选择机场：预算、流量、线路与测试方法</a>。刚入门的朋友可以先读 <a href="/tutorials/what-is-jichang/">机场是什么</a>。</p>
+    <h2>怎么选机场？6 条新手选购原则速查表</h2>
+    <p>面对市场上品牌繁多的机场服务，新手往往容易被低价或“全专线不限量”等噱头误导。我们结合长期实测与常见翻车案例，将选购时最关键的 6 项核心判断准则提炼整理为下表，助你在下单前快速核对避坑：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">选购原则</th>
+            <th style="width: 35%;">核心判断点</th>
+            <th style="width: 40%;">实操建议与避坑说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 用途与流量规划</strong></td>
+            <td>按需匹配，区分查资料与重度追剧</td>
+            <td>查资料/轻量 AI 选 30–80GB；每天看 YouTube 建议 100GB 以上；经常看 4K 或 Netflix 选 300GB 以上。</td>
+          </tr>
+          <tr>
+            <td><strong>2. 坚持月付试错</strong></td>
+            <td>验证晚高峰抗压，规避跑路风险</td>
+            <td>机场行业普遍存在停运风险，首次只买月付。稳定使用 1–3 个月确认质量后再考虑年付。</td>
+          </tr>
+          <tr>
+            <td><strong>3. 认准“真实月付”</strong></td>
+            <td>识破“折合月付”的低价陷阱</td>
+            <td>“每月 8 元”通常需一次性付清 90–100 元年费，遇故障无法退款。详见 <a href="/tutorials/understand-pricing-plans/">如何看懂套餐</a>。</td>
+          </tr>
+          <tr>
+            <td><strong>4. 晚高峰测速为准</strong></td>
+            <td>20:00–23:00 晚高峰真实表现</td>
+            <td>避开白天闲时跑分虚高，在晚高峰播放 YouTube 4K 测速，延迟平稳不转圈缓冲才算合格。</td>
+          </tr>
+          <tr>
+            <td><strong>5. 专线真伪验证</strong></td>
+            <td>区分廉价公网直连与跨境内网专线</td>
+            <td>多数商家宣称 IPLC/IEPL，需实测晚高峰延迟抖动（小于 10ms）与丢包率。详见 <a href="/tutorials/iplc-iepl-difference/">专线区别</a>。</td>
+          </tr>
+          <tr>
+            <td><strong>6. 重视流媒体与 AI 纯净度</strong></td>
+            <td>原生 IP 落地与专属优化节点</td>
+            <td>廉价直连节点万人共用，易致 Netflix 仅自制剧、ChatGPT 报 1020 拒绝访问。优先选带原生解锁标签的节点。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--color-text-light);">完整指南：<a href="/tutorials/how-to-choose/">如何选择机场：预算、流量、线路与测试方法</a> · 初学者入门：<a href="/tutorials/what-is-jichang/">机场是什么</a></p>
+  </section>
+
+  <section class="content-section prose-wide">
+    <h2>主流流媒体与 AI 工具解锁能力对照表</h2>
+    <p>很多新手购买机场后才发现节点虽然能正常网页出海，却无法正常播放 Netflix 非自制剧，或登录 ChatGPT 时频繁被拦截。不同平台对 IP 纯净度与地理位置有着严格的风控机制，下表总结了主流海外平台的解锁要求与实操技巧：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">平台 / 工具</th>
+            <th style="width: 28%;">解锁核心要求</th>
+            <th style="width: 25%;">常见报错与受限表现</th>
+            <th style="width: 25%;">推荐节点与排查技巧</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Netflix (奈飞)</strong></td>
+            <td>当地原生住宅/机房 IP 支持</td>
+            <td>提示“您正在使用代理”或仅能看自制剧</td>
+            <td>选择标有“原生/解锁/Streaming”的香港、台湾、新加坡、日本或美西节点</td>
+          </tr>
+          <tr>
+            <td><strong>ChatGPT / OpenAI</strong></td>
+            <td>纯净海外 IP，未被 Cloudflare 风控</td>
+            <td>提示 1020 报错、Access Denied 或地区不支持</td>
+            <td>避开香港节点；优先使用新加坡、日本、美西专线节点；开启无痕模式</td>
+          </tr>
+          <tr>
+            <td><strong>Claude / Anthropic</strong></td>
+            <td>高纯净度商业或住宅 IP</td>
+            <td>提示 App not available in your area 或账号封禁</td>
+            <td>选用美国或英国专线节点；固定使用同一节点 IP，避免跨国频繁跳跃</td>
+          </tr>
+          <tr>
+            <td><strong>YouTube 4K / 8K</strong></td>
+            <td>单线程大带宽、极低丢包率</td>
+            <td>晚高峰自动降画质至 480p 或转圈缓冲</td>
+            <td>优先使用 IPLC/IEPL 跨境专线，避开公网国际出口拥堵</td>
+          </tr>
+          <tr>
+            <td><strong>Disney+ / HBO Max</strong></td>
+            <td>对应国家版权 IP 分流支持</td>
+            <td>提示 Error code 或无法加载视频源</td>
+            <td>切换至台区（含繁中字幕）、美区或新加坡节点，清除浏览器 Cookie 重试</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="content-section about-method">
     <h2>我们的整理方法与更新机制</h2>
+    <p>为了保证本站推荐的客观性与数据时效性，机场 Pro 坚持独立信息核对并公开所有测试流程。以下是我们收集资料、核实数据与处理商业合作的基本原则：</p>
     <div class="method-grid">
       <div class="method-card">
         <h3>资料来源</h3>
@@ -274,7 +362,10 @@ const schema = graph(
   <FaqList faqs={faqs} title="机场推荐常见问题（FAQ）" collapsible={true} />
 
   <section class="content-section closing">
-    <p>机场 Pro 会持续补充各家机场的晚高峰实测与流媒体解锁数据。下一步可以看：<a href="/cheap/">便宜机场推荐</a> · <a href="/stable/">稳定机场推荐</a> · <a href="/value/">性价比机场推荐</a> · <a href="/reviews/">全部机场评测</a> · <a href="/coupons/">机场优惠码</a> · <a href="/tutorials/">使用教程</a></p>
+    <div style="padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
+      <p style="margin-bottom: 0.5rem;"><strong>各品牌独立评测：</strong><a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/feimao/">飞猫云评测</a> · <a href="/reviews/guangsu/">光速云评测</a> · <a href="/reviews/ermao/">二猫云评测</a> · <a href="/reviews/jilian/">极连云评测</a> · <a href="/reviews/">查看全部 9 家品牌评测 &rarr;</a></p>
+      <p style="margin-bottom: 0;"><strong>新手出海选购与配置教程：</strong><a href="/tutorials/how-to-choose/">新手如何选机场</a> · <a href="/tutorials/clash-verge-rev-guide/">Clash Verge 教程</a> · <a href="/tutorials/v2rayn-guide/">v2rayN 教程</a> · <a href="/tutorials/node-timeout-fix/">节点超时解决</a> · <a href="/compare/">机场综合对比表</a> · <a href="/coupons/">机场优惠码</a></p>
+    </div>
   </section>
 
 </Layout>

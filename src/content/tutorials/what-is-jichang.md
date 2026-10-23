@@ -4,7 +4,7 @@ description: "机场是提供代理节点订阅的服务商。本文用通俗语
 category: "新手基础与术语"
 tags: ["新手入门", "机场是什么", "术语"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["how-to-choose", "understand-pricing-plans", "direct-vs-relay"]
 author: "机场 Pro 编辑部"
@@ -41,7 +41,7 @@ author: "机场 Pro 编辑部"
 
 ## 使用机场的基本流程
 
-1. **选机场**：根据预算和用途选择，可以参考本站的 [机场推荐与对比](/)。
+1. **选机场**：根据预算和用途选择，可以参考本站的 [机场综合对比表](/compare/)。
 2. **注册购买**：建议第一次先买**月付**，确认稳定后再考虑长周期。
 3. **复制订阅链接**：在机场后台的“仪表盘”或“一键订阅”里复制。
 4. **安装客户端**：Windows 常用 Clash Verge Rev、v2rayN；安卓常用 Clash Meta for Android、NekoBox；iPhone 常用 Shadowrocket。
@@ -62,4 +62,4 @@ author: "机场 Pro 编辑部"
 
 **一个机场能多人用吗？** 取决于设备数限制和流量。合租时注意流量消耗，且不要在不信任的人之间共享订阅链接。
 
-想直接看结论？前往 [2026 机场推荐与对比](/)，或阅读 [如何选择机场](/tutorials/how-to-choose/)。
+想直接看参数对比？前往 [机场综合对比表](/compare/)，或阅读 [如何选择机场](/tutorials/how-to-choose/)。

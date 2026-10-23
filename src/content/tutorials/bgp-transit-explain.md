@@ -40,7 +40,5 @@ relatedArticles: ["shadowsocks-vs-vmess","hysteria2-tuic","direct-vs-relay"]
 - [查看全站机场综合对比](/compare/)
 
 - [如何选择适合自己的机场？](../../../tutorials/how-to-choose/)
-- [便宜机场推荐：月付与年付的成本差异](../../../cheap/)
-- [稳定机场推荐：专线与中转的区别](../../../stable/)
 - 了解更多：[机场 Pro 首页](../../../)
 

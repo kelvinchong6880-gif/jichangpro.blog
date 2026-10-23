@@ -4,7 +4,7 @@ description: "开了代理，DNS 查询却还在走本地运营商，这就是 D
 category: "常见问题"
 tags: ["DNS 泄漏", "DNS", "隐私", "TUN 模式", "ChatGPT"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["tun-mode-explain", "chatgpt-access-denied", "global-vs-rule-mode"]
 author: "机场 Pro 编辑部"
@@ -49,4 +49,4 @@ author: "机场 Pro 编辑部"
 
 普通浏览网页影响不大；但如果你使用 ChatGPT、Claude 等对风控敏感的服务，或在意隐私，建议排查一次。相关问题见 [ChatGPT 提示无法访问怎么办](/tutorials/chatgpt-access-denied/)。
 
-相关阅读：[TUN 模式是什么](/tutorials/tun-mode-explain/) ｜ [2026 机场推荐](/)
+相关阅读：[TUN 模式是什么](/tutorials/tun-mode-explain/) ｜ [机场综合对比表](/compare/)

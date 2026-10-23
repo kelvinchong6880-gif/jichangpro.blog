@@ -4,7 +4,7 @@ description: "机场年付看起来便宜，但需要一次付清、剩余费用
 category: "选择与套餐理解"
 tags: ["月付", "年付", "套餐选择", "机场跑路"]
 publishedAt: 2026-10-02
-updatedAt: 2026-10-02
+updatedAt: 2026-10-23
 draft: false
 relatedArticles: ["understand-pricing-plans", "one-time-plan-explain", "how-to-choose"]
 author: "机场 Pro 编辑部"
@@ -54,4 +54,4 @@ author: "机场 Pro 编辑部"
 - 不要在机场账户里长期存放大额余额；
 - 关注机场公告，出现频繁宕机、客服失联时及时止损。
 
-相关阅读：[如何看懂机场套餐](/tutorials/understand-pricing-plans/) ｜ [便宜机场推荐](/cheap/) ｜ [2026 机场推荐](/)
+相关阅读：[如何看懂机场套餐](/tutorials/understand-pricing-plans/) ｜ [机场综合对比表](/compare/)

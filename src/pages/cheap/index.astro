@@ -18,6 +18,31 @@ const byYearly = rows.filter(r => r.s.minYearlySmall);
 const byOneTime = rows.filter(r => r.s.minOneTime);
 const cheapest = [...byMonthly].sort((x, y) => x.s.minMonthly! - y.s.minMonthly! || y.s.entryTraffic! - x.s.entryTraffic!)[0];
 
+// 按预算分档：每档列出落在该价位的品牌与套餐
+const fmtPlan = (name: string, p: { price: number; traffic: number }, unit: string) => `${name} ¥${p.price}${unit}（${p.traffic}GB）`;
+const budgetTiers = [
+  {
+    tier: '年付小包（折合每月 10 元以内）',
+    items: byYearly.map(r => fmtPlan(r.a.name, r.s.minYearlySmall!, '/年')),
+    fit: '每月用量 50–60GB 以内，只查资料、用 AI、收发邮件，并确定会长期使用',
+  },
+  {
+    tier: '真实月付 20 元及以下',
+    items: byMonthly.filter(r => r.s.minMonthly! <= 20).map(r => fmtPlan(r.a.name, { price: r.s.minMonthly!, traffic: r.s.entryTraffic! }, '/月')),
+    fit: '第一次买机场、想用最低成本试一个月的学生和轻度用户',
+  },
+  {
+    tier: '真实月付 21–25 元',
+    items: byMonthly.filter(r => r.s.minMonthly! > 20 && r.s.minMonthly! <= 25).map(r => fmtPlan(r.a.name, { price: r.s.minMonthly!, traffic: r.s.entryTraffic! }, '/月')),
+    fit: '每天看 YouTube 1080p、偶尔追剧，需要 130–160GB 月流量的日常用户',
+  },
+  {
+    tier: '不限时流量包 120 元以内',
+    items: byOneTime.filter(r => r.s.minOneTime!.price <= 120).map(r => fmtPlan(r.a.name, r.s.minOneTime!, '')),
+    fit: '一年只用几次、或给手机和备用设备准备“防失联”线路的用户',
+  },
+].filter(t => t.items.length > 0);
+
 const faqs: Faq[] = [
   { q: '最便宜的机场多少钱一个月？', a: cheapest ? `本站收录品牌中，月付最低的是${cheapest.a.name}，¥${cheapest.s.minMonthly}/月（${cheapest.s.entryTraffic}GB）。如果接受年付，年付小包折合每月不到 10 元。` : '请查看下方对比表。' },
   { q: '便宜机场会不会很卡？', a: '价格低不等于质量差。月付 20–25 元档的机场多数宣称专线或中转线路，日常使用足够。需要警惕的是月付几元却承诺“全专线不限量”的机场，以及没有月付选项、只能年付的陌生机场。' },
@@ -28,16 +53,39 @@ const schema = graph(faqPage(faqs));
 ---
 
 <Layout
-  title={`便宜机场推荐${year}：月付 25 元以内、年付小包与不限时套餐对比 | 机场 Pro`}
+  title={`便宜机场推荐${year}：月付 ${cheapest?.s.minMonthly ?? 18} 元起，年付折合每月不到 10 元的低价机场对比 | 机场 Pro`}
   description={`${year}年便宜机场推荐：对比月付 18–25 元档、年付小包（折合每月不到 10 元）和不限时流量包，教你避开“折合月付”低价陷阱。`}
   schema={schema}
 >
   <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '便宜机场推荐' }]} />
 
   <div class="prose">
-    <h1>{year}年便宜机场推荐<span class="h1-sub">精选 {rows.length} 家高性价比便宜机场推荐：真实月付 {cheapest?.s.minMonthly ?? 18} 元起与套餐横评</span></h1>
+    <h1>{year}年便宜机场推荐<span class="h1-sub">{rows.length} 家低价机场对比：真实月付 {cheapest?.s.minMonthly ?? 18} 元起、年付小包与不限时套餐</span></h1>
     <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
     <p>本页的“便宜机场”指<strong>真实月付在 25 元以内</strong>，或提供年付小包、低价不限时流量包的机场。比较便宜套餐时，要综合权衡<strong>实际支付金额、付款周期、可用流量、线路倍率以及流媒体与 AI 解锁能力</strong>——价格低不等于质量差，但低价往往伴随着特定限制，选购时务必避开“折合月付”和“虚假专线”的低价陷阱。</p>
+
+    <h2>按预算分档：每个价位能买到什么</h2>
+    <p>“便宜”对每个人的意思不一样：有人只想花最少的钱试一个月，有人愿意一次付一年换更低的月均成本，也有人一年只用几次。下表把本站收录的低价套餐按预算分成四档，每档列出对应的品牌和套餐（数据来自各家官网，{siteConfig.lastUpdated} 核对），先找到自己的预算档，再往下看具体对比：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%;">预算档位</th>
+            <th style="width: 48%;">本站收录的对应套餐</th>
+            <th style="width: 30%;">适合人群</th>
+          </tr>
+        </thead>
+        <tbody>
+          {budgetTiers.map(t => (
+            <tr>
+              <td><strong>{t.tier}</strong></td>
+              <td style="font-size: 0.875rem;">{t.items.join('；')}</td>
+              <td style="font-size: 0.875rem;">{t.fit}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
     <h2>各品牌真实月付起价与节点说明</h2>
     <p>我们强烈建议新手<strong>首次购买一律选择真实月付</strong>。真实月付的最大优势在于“试错成本低”——只需花费 18–25 元即可实测机场在你所在本地宽带（电信/联通/移动）晚高峰下的真实速度、延迟以及 <strong>ChatGPT 和流媒体的解锁稳定性</strong>。如果体验不佳，下个月随时更换，无需承担几十上百元年付可能带来的资金损失。</p>
@@ -59,7 +107,7 @@ const schema = graph(faqPage(faqs));
             <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minMonthly}/月</td>
             <td>{r.s.entryTraffic}GB</td>
             <td style="color: var(--color-text-lighter);">约 ¥{r.s.entryPerGb?.toFixed(2)}</td>
-            <td style="font-size: 0.875rem;">基础网页/YouTube 4K 流畅；主流节点支持 Netflix 与 ChatGPT 分流解锁</td>
+            <td style="font-size: 0.875rem;">官网宣称支持 Netflix 与 ChatGPT 分流解锁；本站尚未实测，建议首月自行测试</td>
           </tr>
         ))}
       </tbody>
@@ -113,11 +161,33 @@ const schema = graph(faqPage(faqs));
             <td style="color: var(--color-primary); font-weight: bold;">¥{r.s.minOneTime?.price}</td>
             <td>{r.s.minOneTime?.traffic}GB</td>
             <td style="color: var(--color-text-lighter);">用完即止 (不过期)</td>
-            <td style="font-size: 0.875rem;">享完整节点池权限；支持主流流媒体与 AI 解锁，按实际用量计费更划算</td>
+            <td style="font-size: 0.875rem;">按实际用量扣流量，不会月底清零；节点范围与解锁情况以官网说明为准</td>
           </tr>
         ))}
       </tbody>
     </table>
+    </div>
+
+    <h2>便宜套餐的流量够不够用？按用途估算表</h2>
+    <p>买便宜套餐最常见的后悔是“月中流量就用完了”。下表按常见用途估算每月大致消耗的流量，并对照入门月付（约 100–160GB）和年付小包（约 50–60GB）是否够用。估算值按每天使用时长计算，实际消耗会因视频清晰度和后台应用而有出入：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 28%;">主要用途</th>
+            <th style="width: 22%;">每月流量估算</th>
+            <th style="width: 25%;">入门月付（100–160GB）</th>
+            <th style="width: 25%;">年付小包（50–60GB）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>查资料、Google 搜索、收发邮件</strong></td><td>10–30GB</td><td>完全够用</td><td>够用</td></tr>
+          <tr><td><strong>ChatGPT / Claude 文字对话、写代码</strong></td><td>5–20GB</td><td>完全够用</td><td>够用</td></tr>
+          <tr><td><strong>每天 1 小时 YouTube 1080p</strong></td><td>60–100GB</td><td>够用</td><td>不够，容易月中用完</td></tr>
+          <tr><td><strong>经常看 4K 视频或 Netflix 追剧</strong></td><td>300GB 以上</td><td>不够，建议看<a href="/value/">性价比中档套餐</a></td><td>不够</td></tr>
+          <tr><td><strong>手机备用、偶尔登录海外 App</strong></td><td>每月 5GB 以内</td><td>浪费，月底清零</td><td>可以，但不限时流量包更省</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <h2>看懂便宜机场的四大价格陷阱与避坑对照表</h2>
@@ -161,14 +231,14 @@ const schema = graph(faqPage(faqs));
       </table>
     </div>
 
-    <h2>便宜机场流媒体与 AI 解锁实测指南表</h2>
+    <h2>便宜机场流媒体与 AI 解锁使用指南表</h2>
     <p>很多预算有限的朋友常问：“低价机场到底能不能顺畅使用 ChatGPT 或观看 Netflix？”只要掌握正确的节点选择、规则分流和备用策略，平价机场同样能拥有良好的解锁体验，具体对比如下：</p>
     <div class="table-scroll">
       <table class="content-table">
         <thead>
           <tr>
             <th style="width: 22%;">目标使用场景</th>
-            <th style="width: 28%;">便宜套餐实测表现</th>
+            <th style="width: 28%;">便宜套餐一般表现</th>
             <th style="width: 25%;">注意事项与限制</th>
             <th style="width: 25%;">最佳使用技巧</th>
           </tr>
@@ -202,6 +272,50 @@ const schema = graph(faqPage(faqs));
       </table>
     </div>
 
+    <h2>便宜机场、免费机场与公益节点有什么区别</h2>
+    <p>搜索“便宜机场”时，经常会看到“免费机场”“公益节点”“白嫖订阅”这类结果。它们看起来更省钱，但在稳定性、隐私和可用时间上差别很大。下表从五个方面对比三类来源，帮你判断哪种适合长期使用：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 18%;">对比项</th>
+            <th style="width: 28%;">便宜付费机场（月付 25 元内）</th>
+            <th style="width: 27%;">免费机场 / 签到送流量</th>
+            <th style="width: 27%;">网上公开的免费节点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>花费</strong></td><td>每月 18–25 元，或年付约 84–99 元</td><td>免费，通常靠签到或广告换流量</td><td>免费</td></tr>
+          <tr><td><strong>可用流量</strong></td><td>每月 100–160GB，按月重置</td><td>每天几百 MB 到几 GB</td><td>不固定，经常失效</td></tr>
+          <tr><td><strong>晚高峰速度</strong></td><td>取决于线路，专线套餐相对平稳</td><td>多数限速，高峰期拥堵明显</td><td>极不稳定，常常连不上</td></tr>
+          <tr><td><strong>隐私与安全</strong></td><td>有账号与工单，可以追责</td><td>运营者不明，可能记录访问数据</td><td>来源未知，存在流量被监听的风险</td></tr>
+          <tr><td><strong>适合用途</strong></td><td>日常主力、工作、AI 工具</td><td>临时应急、体验客户端</td><td>不建议用于登录任何账号</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>下单前 6 项检查清单</h2>
+    <p>便宜套餐的利润空间小，更需要在付款前把规则看清楚。下面 6 项都能在机场官网的套餐页、用户协议或公告里找到，花 5 分钟逐项核对，可以避开大部分低价套餐的坑：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%;">检查项</th>
+            <th style="width: 33%;">在哪里看</th>
+            <th style="width: 45%;">合格标准</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. 有没有真实月付</strong></td><td>套餐购买页的付款周期选项</td><td>可以只买一个月；只卖年付的陌生机场要谨慎</td></tr>
+          <tr><td><strong>2. 节点倍率</strong></td><td>客户端节点名称或官网节点列表</td><td>常用节点为 1.0x；高倍率节点会让流量消耗翻倍</td></tr>
+          <tr><td><strong>3. 流量重置日</strong></td><td>用户中心或套餐说明</td><td>按购买日或每月 1 日重置，规则写清楚。详见<a href="/tutorials/traffic-reset-rule/">流量重置规则</a></td></tr>
+          <tr><td><strong>4. 设备数限制</strong></td><td>套餐详情或用户协议</td><td>同时在线设备数够自己用。详见<a href="/tutorials/device-limit-explain/">设备数限制说明</a></td></tr>
+          <tr><td><strong>5. 退款与跑路条款</strong></td><td>用户协议 / 服务条款</td><td>写明退款条件；不要一次充值大额余额</td></tr>
+          <tr><td><strong>6. 公告与售后渠道</strong></td><td>官网首页、Telegram 频道、工单系统</td><td>有持续更新的公告和工单，节点故障时能找到人</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2>便宜机场完整对比表</h2>
     <p>以下为本站收录的月付在 25 元以内或提供低价年付/不限时包的机场综合对比。点击表头可按价格和流量自由排序：</p>
   </div>
@@ -209,7 +323,7 @@ const schema = graph(faqPage(faqs));
   <ComparisonTable airports={cheapAirports} />
 
   <div class="prose">
-    <FaqList faqs={faqs} />
+    <FaqList faqs={faqs} title="便宜机场常见问题" intro="以下整理了选购低价机场时最常被问到的问题，价格数据会随每月核对自动更新。" />
     <div style="margin-top: 2rem; padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
       <p style="margin-bottom: 0.5rem;"><strong>精选平价品牌评测：</strong><a href="/reviews/jilian/">极连云评测</a> · <a href="/reviews/ermao/">二猫云评测</a> · <a href="/reviews/yifan/">一翻云评测</a> · <a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/">全部品牌评测 &rarr;</a></p>
       <p style="margin-bottom: 0;"><strong>相关选购与使用教程：</strong><a href="/tutorials/understand-pricing-plans/">如何看懂机场套餐与倍率</a> · <a href="/tutorials/one-time-plan-explain/">不限时流量包防坑指南</a> · <a href="/tutorials/monthly-vs-yearly/">月付还是年付更划算</a> · <a href="/compare/">机场综合对比表</a></p>

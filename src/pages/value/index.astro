@@ -18,12 +18,38 @@ const rows = allAirports.map(a => {
 }).filter(r => r.mid);
 const valueAirports = rows.map(r => r.a);
 const bestPerGb = [...rows].sort((x, y) => x.perGb - y.perGb)[0];
+const midPerGbs = rows.map(r => r.perGb);
+const midRange = `¥${Math.min(...midPerGbs).toFixed(2)}–${Math.max(...midPerGbs).toFixed(2)}/GB`;
+
+// 套餐阶梯：入门档（最便宜）/ 中档 / 大流量档（流量最大）
+const fmt = (p: { price: number; traffic: number }) => `¥${p.price} / ${p.traffic}GB（¥${(p.price / p.traffic).toFixed(2)}/GB）`;
+const ladder = rows.map(r => {
+  const plans = r.s.monthlyPlans;
+  const top = [...plans].sort((x, y) => y.traffic - x.traffic || x.price - y.price)[0];
+  return { a: r.a, entry: plans[0], mid: r.mid, top };
+});
+
+// 不限时流量包：最便宜一档与每 GB 最低一档
+const oneTimeRows = rows
+  .filter(r => r.s.oneTimePlans.length > 0)
+  .map(r => {
+    const cheapestPack = r.s.oneTimePlans[0];
+    const bestPack = [...r.s.oneTimePlans].sort((x, y) => x.price / x.traffic - y.price / y.traffic)[0];
+    return { a: r.a, cheapestPack, bestPack, count: r.s.oneTimePlans.length };
+  });
+
+// 合租分摊：取每家流量最大的月付套餐
+const shareRows = ladder.map(l => ({
+  a: l.a,
+  plan: l.top,
+  device: l.a.tags.includes('不限设备') ? '官网宣称不限设备' : l.a.deviceLimit ? `最多 ${l.a.deviceLimit} 台` : '官网未明确，购买前确认',
+}));
 
 const faqs: Faq[] = [
   { q: '性价比最高的机场是哪家？', a: bestPerGb ? `按本站收录品牌中档套餐的每 GB 成本计算，${bestPerGb.a.name}的${bestPerGb.mid.name}（¥${bestPerGb.mid.price}/月 ${bestPerGb.mid.traffic}GB）每 GB 单价最低。但真正的性价比还取决于你的日常实际用量、晚高峰稳定性以及对 Netflix / ChatGPT 的解锁要求。` : '请查看下方对比表。' },
   { q: '性价比和便宜有什么区别？', a: '“便宜”只关注付出的绝对金额（如只看是否在 20 元以内）；而“性价比”关注的是“每一块钱换到的可用流量、晚高峰专线速度以及流媒体与 AI 的全解锁体验”。对于每月用量超过 150GB 的用户，30–40 元档套餐的单价和体验往往远超入门档。' },
   { q: '多人合租机场套餐划算吗？有什么注意事项？', a: '非常划算。本站收录的多数性价比机场宣称不限制同时连接的设备数，2–3 位朋友或家人合买一个 40 元左右的大流量套餐，人均每月只需 10 几元，能享受旗舰级的速度。但切记只能与信任的人分享订阅链接，避免公开泄露导致 IP 被滥用封锁。' },
-  { q: '性价比机场能顺利解锁 Netflix 和 ChatGPT 吗？', a: '完全可以。中档性价比套餐通常向用户开放全量的 IPLC/IEPL 专线和流媒体优化节点，相比低价入门档，中档节点具有更高的 IP 纯净度和定期维护保障，Netflix 4K 全区和 ChatGPT-4o 对话解锁成功率极高。' },
+  { q: '性价比机场能顺利解锁 Netflix 和 ChatGPT 吗？', a: '本站收录的机场在官网上都宣称支持流媒体与 AI 工具解锁，中档套餐通常也会开放更多地区的节点。但能否解锁取决于具体节点的 IP，本站尚未完成独立实测，建议先买一个月，用标有“解锁 / Streaming”的节点自行测试 Netflix 非自制剧和 ChatGPT 登录。' },
 ];
 const schema = graph(faqPage(faqs));
 ---
@@ -36,12 +62,12 @@ const schema = graph(faqPage(faqs));
   <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '性价比机场推荐' }]} />
 
   <div class="prose">
-    <h1>{year}年性价比机场推荐<span class="h1-sub">精选 {rows.length} 家高性价比机场推荐：中档套餐每 GB 单价测算与流量横评</span></h1>
+    <h1>{year}年性价比机场推荐<span class="h1-sub">精选 {rows.length} 家高性价比机场推荐：中档套餐每 GB 单价测算与流量对比</span></h1>
     <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
     <p>在机场选购中，“性价比”绝不是一味图便宜，而是<strong>每一块钱能换来多少实打实的高速流量、抗晚高峰能力以及流畅的流媒体与 AI 解锁体验</strong>。对于每月用量在 150GB–500GB 以上的日常主力用户（经常看 YouTube 4K、追剧、写代码、查资料和使用 ChatGPT），月付 30–50 元区间的<strong>中档主力套餐</strong>不仅每 GB 成本最低，而且普遍享有最高级别的专线节点池与优先带宽保证。</p>
 
     <h2>各品牌中档套餐每 GB 成本测算</h2>
-    <p>为了直观展现各家“花同样钱能买到多少流量”，我们提取了各机场月付 30–50 元区间的核心主力套餐，并按 <code>套餐价格 ÷ 每月流量</code> 换算出真实的每 GB 成本。可以看出，中档套餐的每 GB 成本普遍被压缩到了 <strong>¥0.08–0.15/GB</strong>，远比入门档划算得多：</p>
+    <p>为了直观展现各家“花同样钱能买到多少流量”，我们提取了各机场月付 30–50 元区间的核心主力套餐，并按 <code>套餐价格 ÷ 每月流量</code> 换算出真实的每 GB 成本。可以看出，中档套餐的每 GB 成本在 <strong>{midRange}</strong> 之间，普遍比入门档更划算：</p>
     <div class="table-scroll">
       <table>
         <thead><tr><th>品牌</th><th>中档套餐</th><th>价格</th><th>流量</th><th>每 GB 成本</th><th>解锁支持度</th></tr></thead>
@@ -53,13 +79,90 @@ const schema = graph(faqPage(faqs));
               <td style="color: var(--color-primary); font-weight: bold;">¥{r.mid.price}/月</td>
               <td>{r.mid.traffic}GB</td>
               <td style="color: var(--color-text);">约 ¥{r.perGb.toFixed(3)}</td>
-              <td style="font-size: 0.875rem;">全专线开放 / 支持 Netflix 4K、Disney+ 与 ChatGPT 全面解锁</td>
+              <td style="font-size: 0.875rem;">官网宣称支持 Netflix、Disney+ 与 ChatGPT 解锁；本站尚未实测</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
     <p class="note">中档套餐取每家月付 30–50 元区间的套餐；没有该价位的取第二档。数据来自官网公开价格，以官网为准。</p>
+
+    <h2>各品牌月付套餐阶梯与每 GB 成本</h2>
+    <p>同一家机场，套餐越大通常每 GB 越便宜，但也不是越贵越划算——有些大流量档的单价反而比中档高。下表列出每家机场的入门档、中档和流量最大的一档，并在括号里标注每 GB 成本，方便你判断“加钱升档”值不值：</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>品牌</th><th>入门档</th><th>中档</th><th>大流量档</th></tr></thead>
+        <tbody>
+          {ladder.map(l => (
+            <tr>
+              <td><strong><a href={`/reviews/${l.a.reviewSlug}/`}>{l.a.name}</a></strong></td>
+              <td style="font-size: 0.875rem;">{l.entry ? fmt(l.entry) : '—'}</td>
+              <td style="font-size: 0.875rem;">{fmt(l.mid)}</td>
+              <td style="font-size: 0.875rem;">{l.top ? fmt(l.top) : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>不限时流量包每 GB 成本对比</h2>
+    <p>不限时流量包一次付费、用完为止，没有月底清零的浪费，但每 GB 单价通常比月付高。下表对比各家最便宜的一档和每 GB 最划算的一档，适合用量不固定、或想给手机准备备用线路的用户参考：</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>品牌</th><th>档位数</th><th>最便宜一档</th><th>每 GB 最划算一档</th></tr></thead>
+        <tbody>
+          {oneTimeRows.map(o => (
+            <tr>
+              <td><strong><a href={`/reviews/${o.a.reviewSlug}/`}>{o.a.name}</a></strong></td>
+              <td>{o.count} 档</td>
+              <td style="font-size: 0.875rem;">{fmt(o.cheapestPack)}</td>
+              <td style="font-size: 0.875rem;">{fmt(o.bestPack)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>按每月用量匹配最划算的套餐类型</h2>
+    <p>性价比的前提是“买的流量刚好用得完”。买得太小会月中断流，买得太大又会月底清零浪费。下表按每月实际用量给出最划算的套餐类型和大致预算，可以先在客户端里看一下自己上个月的用量，再对照选择：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 18%;">每月用量</th>
+            <th style="width: 30%;">最划算的套餐类型</th>
+            <th style="width: 18%;">大致预算</th>
+            <th style="width: 34%;">说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>30GB 以内</strong></td><td>不限时流量包或年付小包</td><td>¥100 左右一次</td><td>月付会有大量流量被清零，详见<a href="/tutorials/one-time-plan-explain/">不限时套餐说明</a></td></tr>
+          <tr><td><strong>30–80GB</strong></td><td>年付小包或入门月付</td><td>¥7–25/月</td><td>确定长期使用选年付小包，否则先月付</td></tr>
+          <tr><td><strong>80–200GB</strong></td><td>入门或低档中档月付</td><td>¥20–35/月</td><td>参考<a href="/cheap/">便宜机场推荐</a>里的入门档</td></tr>
+          <tr><td><strong>200–400GB</strong></td><td>中档月付（本页重点）</td><td>¥30–50/月</td><td>每 GB 成本最低的区间，适合日常主力</td></tr>
+          <tr><td><strong>500GB 以上</strong></td><td>大流量档，或多人合租</td><td>¥60–150/月</td><td>一个人用不完时，考虑和家人分摊（见下表）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>多人合租分摊成本测算</h2>
+    <p>大流量套餐一个人往往用不完，和家人或信任的朋友合买，人均成本能降到入门档以下。下表取每家流量最大的月付套餐，按 2 人和 3 人平均分摊计算人均月费，并标注设备数规则——合租前一定要确认同时在线设备数够用，详见 <a href="/tutorials/device-limit-explain/">设备数限制说明</a>：</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>品牌</th><th>大流量套餐</th><th>2 人人均</th><th>3 人人均</th><th>设备数</th></tr></thead>
+        <tbody>
+          {shareRows.filter(s => s.plan).map(s => (
+            <tr>
+              <td><strong><a href={`/reviews/${s.a.reviewSlug}/`}>{s.a.name}</a></strong></td>
+              <td style="font-size: 0.875rem;">¥{s.plan.price}/月 · {s.plan.traffic}GB</td>
+              <td>¥{(s.plan.price / 2).toFixed(1)} · {Math.floor(s.plan.traffic / 2)}GB</td>
+              <td>¥{(s.plan.price / 3).toFixed(1)} · {Math.floor(s.plan.traffic / 3)}GB</td>
+              <td style="font-size: 0.875rem;">{s.device}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
     <h2>性价比评估四大维度速查表</h2>
     <p>衡量机场套餐的性价比，不能单纯看价格绝对值或标称流量，而是要综合考量流量单价甜点区、长效不限时机制、设备共享合租与周期折扣。以下是评估性价比的核心维度与实操选购策略：</p>
@@ -143,6 +246,27 @@ const schema = graph(faqPage(faqs));
       </table>
     </div>
 
+    <h2>便宜、稳定、性价比：三类推荐怎么选</h2>
+    <p>本站把机场推荐分成便宜、稳定、性价比三类，它们的筛选标准和适合人群不同。如果你还不确定自己属于哪一类，可以先对照下表，再进入对应的推荐页：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 16%;">对比项</th>
+            <th style="width: 28%;"><a href="/cheap/">便宜机场推荐</a></th>
+            <th style="width: 28%;"><a href="/stable/">稳定机场推荐</a></th>
+            <th style="width: 28%;">性价比机场推荐（本页）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>关注重点</strong></td><td>每月实际付出的金额最低</td><td>晚高峰延迟和丢包稳定</td><td>每块钱换到的流量和体验</td></tr>
+          <tr><td><strong>典型价位</strong></td><td>月付 25 元内、年付小包</td><td>不限，以专线套餐为主</td><td>月付 30–50 元中档</td></tr>
+          <tr><td><strong>适合人群</strong></td><td>学生、轻度用户、第一次买</td><td>远程办公、外贸、视频会议</td><td>每天看视频的日常主力用户</td></tr>
+          <tr><td><strong>主要风险</strong></td><td>流量少、倍率和年付陷阱</td><td>专线真假难辨、价格较高</td><td>买大了用不完、合租设备数不够</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2>性价比机场完整对比表</h2>
     <p>以下为具备高性价比特征的机场全维度对比。点击表头可按月付起价、中档价格或流量进行一键升降序排列：</p>
   </div>
@@ -150,7 +274,7 @@ const schema = graph(faqPage(faqs));
   <ComparisonTable airports={valueAirports} />
 
   <div class="prose">
-    <FaqList faqs={faqs} />
+    <FaqList faqs={faqs} title="性价比机场常见问题" intro="以下解答了关于每 GB 成本、合租和解锁能力的常见问题，价格相关的回答会随每月核对自动更新。" />
     <div style="margin-top: 2rem; padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
       <p style="margin-bottom: 0.5rem;"><strong>高性价比品牌评测：</strong><a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/guangsu/">光速云评测</a> · <a href="/reviews/xingdaomeng/">星岛梦评测</a> · <a href="/reviews/yuzhou/">宇宙云评测</a> · <a href="/reviews/">全部品牌评测 &rarr;</a></p>
       <p style="margin-bottom: 0;"><strong>出海选购与套餐教程：</strong><a href="/tutorials/how-to-choose/">如何挑选适合自己的机场</a> · <a href="/tutorials/device-limit-explain/">设备数限制与合租防坑</a> · <a href="/tutorials/traffic-reset-rule/">流量重置规则详解</a> · <a href="/compare/">机场综合对比表</a></p>

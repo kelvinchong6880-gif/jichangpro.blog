@@ -4,6 +4,8 @@ import type { Faq } from '../utils/schema';
 interface Props {
   faqs: Faq[];
   title?: string;
+  /** 标题下方的说明文字 */
+  intro?: string;
   /** 折叠式（details）或平铺式 */
   collapsible?: boolean;
   /** 是否默认展开 */
@@ -12,13 +14,14 @@ interface Props {
   headingLevel?: 'h3' | 'h4';
 }
 
-const { faqs, title = '常见问题', collapsible = false, defaultOpen = true, headingLevel = 'h3' } = Astro.props;
+const { faqs, title = '常见问题', intro, collapsible = false, defaultOpen = true, headingLevel = 'h3' } = Astro.props;
 const H = headingLevel;
 ---
 
 {faqs.length > 0 && (
   <section class="faq-list">
     {title && <h2>{title}</h2>}
+    {intro && <p class="faq-intro">{intro}</p>}
     {faqs.map(f => collapsible ? (
       <details class="faq-item" open={defaultOpen}>
         <summary><H class="faq-q">{f.q}</H></summary>
@@ -35,6 +38,7 @@ const H = headingLevel;
 
 <style>
   .faq-list { margin: 3rem 0; }
+  .faq-intro { margin: 0 0 1.25rem; color: var(--color-text-light); }
   .faq-item {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);

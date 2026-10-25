@@ -30,6 +30,14 @@ const biggest = [...ranked].filter(r => r.stats.maxTraffic !== null).sort((x, y)
 const cheapestYearly = [...ranked].filter(r => r.stats.minYearlySmall !== null).sort((x, y) => (x.stats.minYearlySmall!.price - y.stats.minYearlySmall!.price))[0];
 const cheapestOneTime = [...ranked].filter(r => r.stats.minOneTime !== null).sort((x, y) => (x.stats.minOneTime!.price - y.stats.minOneTime!.price))[0];
 
+const lineTags = ['专线', 'BGP优化'];
+const testStatusLabel = { tested: '已实测', testing: '测试中', untested: '尚未实测' } as const;
+const planTypes = (s: (typeof ranked)[number]['stats']) => [
+  s.minMonthly !== null && `月付 ${s.monthlyPlans.length} 档`,
+  s.minYearlySmall && '年付小包',
+  s.oneTimeCount > 0 && `不限时 ${s.oneTimeCount} 档`,
+].filter(Boolean).join(' · ');
+
 const faqs: Faq[] = [
   {
     q: '2026 年哪个机场最好用？',
@@ -129,7 +137,7 @@ const schema = graph(
       <a href="/value/" class="card-link">
         <div class="card-link-icon">⚖️</div>
         <h2 class="card-h">性价比机场推荐 &rarr;</h2>
-        <p>价格与流量的平衡点</p>
+        <p>月付 30–50 元中档套餐，按每 GB 成本找价格与流量的平衡点</p>
       </a>
     </div>
   </section>
@@ -243,8 +251,114 @@ const schema = graph(
   </section>
 
   <section class="content-section prose-wide">
+    <h2>{count} 家机场核心参数与资料状态速览</h2>
+    <p>上面的对比表侧重价格，这张表补充每家机场的线路标签、套餐类型、支持的客户端，以及本站的价格核对日期和实测进度。“线路标签”来自官网宣称，“本站实测”一栏会在测试完成后更新为测试日期：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 14%;">品牌</th>
+            <th style="width: 14%;">线路标签</th>
+            <th style="width: 26%;">套餐类型</th>
+            <th style="width: 22%;">支持客户端</th>
+            <th style="width: 12%;">价格核对</th>
+            <th style="width: 12%;">本站实测</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ranked.map(({ a, stats }) => (
+            <tr>
+              <td><strong><a href={`/reviews/${a.reviewSlug}/`}>{a.name}</a></strong></td>
+              <td>{a.tags.filter(t => lineTags.includes(t)).join(' / ') || '—'}</td>
+              <td style="font-size: 0.875rem;">{planTypes(stats)}</td>
+              <td style="font-size: 0.875rem;">{a.clients.join(' / ')}</td>
+              <td style="white-space: nowrap;">{a.priceCheckDate ?? '—'}</td>
+              <td>{testStatusLabel[a.testStatus]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-section prose-wide">
+    <h2>按使用场景推荐套餐类型与流量</h2>
+    <p>选机场之前，先想清楚自己主要用来做什么。不同用途需要的流量和线路差别很大，选错类型要么浪费钱，要么不够用。下表按六种常见场景给出建议的每月流量、套餐类型和预算，并链接到对应的分类推荐页：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">使用场景</th>
+            <th style="width: 16%;">每月流量</th>
+            <th style="width: 24%;">建议套餐类型</th>
+            <th style="width: 14%;">预算参考</th>
+            <th style="width: 24%;">去哪里看</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>学生查资料、Google 学术</strong></td><td>30–80GB</td><td>年付小包或入门月付</td><td>¥7–20/月</td><td><a href="/cheap/">便宜机场推荐</a></td></tr>
+          <tr><td><strong>ChatGPT / Claude 日常办公</strong></td><td>30–100GB</td><td>入门月付，选 IP 纯净的节点</td><td>¥20–25/月</td><td><a href="/tutorials/chatgpt-access-denied/">AI 访问报错解决</a></td></tr>
+          <tr><td><strong>每天看 YouTube、追剧</strong></td><td>200–400GB</td><td>中档月付</td><td>¥30–50/月</td><td><a href="/value/">性价比机场推荐</a></td></tr>
+          <tr><td><strong>远程办公、外贸、视频会议</strong></td><td>100–300GB</td><td>专线月付</td><td>¥25–50/月</td><td><a href="/stable/">稳定机场推荐</a></td></tr>
+          <tr><td><strong>家庭或多人合用</strong></td><td>500GB 以上</td><td>大流量月付，确认设备数</td><td>¥60–150/月</td><td><a href="/tutorials/device-limit-explain/">设备数限制说明</a></td></tr>
+          <tr><td><strong>偶尔用、手机备用</strong></td><td>每月不固定</td><td>不限时流量包</td><td>¥100 左右一次</td><td><a href="/tutorials/one-time-plan-explain/">不限时套餐说明</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-section prose-wide">
+    <h2>机场、VPN 与自建节点有什么区别</h2>
+    <p>科学上网常见的三种方式是机场、商业 VPN 和自己租服务器搭节点。三者在价格、上手难度和稳定性上各有取舍，下表从六个方面对比，帮你判断机场是不是最适合自己的方式。想了解基础概念可以先看 <a href="/tutorials/what-is-jichang/">机场是什么</a>：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 16%;">对比项</th>
+            <th style="width: 28%;">机场</th>
+            <th style="width: 28%;">商业 VPN</th>
+            <th style="width: 28%;">自建节点（VPS）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>价格</strong></td><td>每月 18–50 元为主</td><td>国际品牌每月约 30–90 元</td><td>服务器每月约 20–100 元起</td></tr>
+          <tr><td><strong>上手难度</strong></td><td>低，导入订阅链接即可</td><td>最低，装 App 一键连接</td><td>高，需要会 Linux 和配置协议</td></tr>
+          <tr><td><strong>节点数量</strong></td><td>多地区几十个节点可切换</td><td>多地区，但在国内常被干扰</td><td>通常只有 1 个地区</td></tr>
+          <tr><td><strong>国内网络优化</strong></td><td>多数针对国内线路优化，有中转和专线</td><td>一般没有针对性优化</td><td>取决于服务器线路，晚高峰常拥堵</td></tr>
+          <tr><td><strong>分流能力</strong></td><td>支持规则分流，国内网站直连</td><td>多为全局代理</td><td>可以分流，需要自己配置</td></tr>
+          <tr><td><strong>主要风险</strong></td><td>机场停运跑路</td><td>在国内连接不稳定</td><td>IP 被封需要自己更换</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-section prose-wide">
+    <h2>各设备推荐客户端与教程速查表</h2>
+    <p>机场只提供订阅链接，真正连接还需要在设备上装客户端。本站收录的机场都支持 Clash 系列和 Shadowrocket，下表按设备列出推荐客户端、备选方案和对应教程，买好机场后照着导入订阅即可：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 18%;">设备</th>
+            <th style="width: 24%;">推荐客户端</th>
+            <th style="width: 24%;">备选客户端</th>
+            <th style="width: 34%;">配置教程</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Windows</strong></td><td>Clash Verge Rev</td><td>v2rayN</td><td><a href="/tutorials/clash-verge-rev-guide/">Clash Verge Rev 教程</a> · <a href="/tutorials/v2rayn-guide/">v2rayN 教程</a></td></tr>
+          <tr><td><strong>macOS</strong></td><td>Clash Verge Rev</td><td>Surge（付费）</td><td><a href="/tutorials/clash-verge-rev-guide/">Clash Verge Rev 教程</a></td></tr>
+          <tr><td><strong>iPhone / iPad</strong></td><td>Shadowrocket（小火箭）</td><td>Quantumult X、Surge</td><td><a href="/tutorials/shadowrocket-guide/">Shadowrocket 教程</a></td></tr>
+          <tr><td><strong>Android</strong></td><td>Clash Meta for Android</td><td>v2rayNG、NekoBox</td><td>导入方式与 Clash Verge Rev 类似</td></tr>
+          <tr><td><strong>连不上时</strong></td><td colspan="2">先检查订阅、系统时间和代理模式</td><td><a href="/tutorials/node-timeout-fix/">节点超时排查</a> · <a href="/tutorials/global-vs-rule-mode/">规则与全局模式</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-section prose-wide">
     <h2>怎么选机场？6 条新手选购原则速查表</h2>
-    <p>面对市场上品牌繁多的机场服务，新手往往容易被低价或“全专线不限量”等噱头误导。我们结合长期实测与常见翻车案例，将选购时最关键的 6 项核心判断准则提炼整理为下表，助你在下单前快速核对避坑：</p>
+    <p>面对市场上品牌繁多的机场服务，新手往往容易被低价或“全专线不限量”等噱头误导。我们结合各家官网公开资料、常见翻车案例与通用测试方法，将选购时最关键的 6 项核心判断准则提炼整理为下表，助你在下单前快速核对避坑：</p>
     <div class="table-scroll">
       <table class="content-table">
         <thead>
@@ -340,6 +454,30 @@ const schema = graph(
     </div>
   </section>
 
+  <section class="content-section prose-wide">
+    <h2>机场跑路与服务变差的预警信号</h2>
+    <p>机场行业门槛低，每年都有机场停运或服务突然变差。大多数跑路前都有迹可循，下表整理了六个常见预警信号以及看到信号后该怎么做，帮你在损失扩大前及时止损：</p>
+    <div class="table-scroll">
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th style="width: 26%;">预警信号</th>
+            <th style="width: 38%;">可能说明什么</th>
+            <th style="width: 36%;">建议动作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>突然大力推年付、多年付</strong></td><td>可能在短期内集中回笼资金</td><td>坚持月付，不要被大额折扣吸引</td></tr>
+          <tr><td><strong>节点频繁大面积超时</strong></td><td>服务器欠费或运维跟不上</td><td>准备备用机场，不再续费</td></tr>
+          <tr><td><strong>工单长时间无人回复</strong></td><td>运营团队人手不足或已不再维护</td><td>停止充值，用完剩余时长后更换</td></tr>
+          <tr><td><strong>官网或订阅地址频繁更换</strong></td><td>可能被封锁，也可能在规避追责</td><td>只从官方公告渠道获取新地址</td></tr>
+          <tr><td><strong>公告频道长期不更新</strong></td><td>运营停滞</td><td>提前找好替代品，降低依赖</td></tr>
+          <tr><td><strong>节点倍率悄悄调高</strong></td><td>在变相减少你的可用流量</td><td>对比购买时的倍率，必要时更换机场</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="content-section about-method">
     <h2>我们的整理方法与更新机制</h2>
     <p>为了保证本站推荐的客观性与数据时效性，机场 Pro 坚持独立信息核对并公开所有测试流程。以下是我们收集资料、核实数据与处理商业合作的基本原则：</p>
@@ -359,7 +497,7 @@ const schema = graph(
     </div>
   </section>
 
-  <FaqList faqs={faqs} title="机场推荐常见问题（FAQ）" collapsible={true} />
+  <FaqList faqs={faqs} title="机场推荐常见问题（FAQ）" intro={`以下是新手选购机场时最常问的 ${faqs.length} 个问题，点击问题可以展开或收起答案。`} collapsible={true} />
 
   <section class="content-section closing">
     <div style="padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">

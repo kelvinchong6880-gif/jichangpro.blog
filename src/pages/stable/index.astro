@@ -10,6 +10,8 @@ import { faqPage, graph, type Faq } from '../../utils/schema';
 const allAirports = await getAirports();
 const stableAirports = allAirports.filter(a => a.tags.includes('稳定') || a.tags.includes('专线'));
 const year = siteConfig.lastUpdated.slice(0, 4);
+const lineTags = ['专线', 'BGP优化'];
+const testStatusLabel = { tested: '已实测', testing: '测试中', untested: '尚未实测' } as const;
 
 const faqs: Faq[] = [
   { q: '什么样的机场算稳定？', a: '晚高峰（20:00–23:00）延迟波动小（抖动低于 5ms）、极少丢包或大面积超时、特殊敏感时期仍能正常连通的机场。这类机场通常采用真正的 IPLC/IEPL 跨境专线或多线 BGP 优化入口。' },
@@ -29,11 +31,83 @@ const schema = graph(faqPage(faqs));
   <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '稳定机场推荐' }]} />
 
   <div class="prose">
-    <h1>{year}年稳定机场推荐<span class="h1-sub">精选 {stableAirports.length} 家专线稳定机场推荐：IPLC/IEPL 线路与晚高峰测速横评</span></h1>
+    <h1>{year}年稳定机场推荐<span class="h1-sub">{stableAirports.length} 家宣称 IPLC/IEPL 专线的机场对比与晚高峰稳定性判断方法</span></h1>
     <p class="meta-line">最后更新：<time datetime={siteConfig.lastUpdated}>{siteConfig.lastUpdated}</time></p>
     <p>对日常需要<strong>跨境远程办公、外贸沟通、Zoom/Teams 视频会议、学术论文查阅以及重度依赖 ChatGPT/Claude 等 AI 生产力工具</strong>的用户来说，<strong>“线路稳定与低丢包”远比单纯追求低价更为关键</strong>。真正稳定的机场通常采用 IPLC 或 IEPL 跨境专线，数据在内网点对点传输，既避开了晚高峰公网国际出口的严重拥堵，在网络波动或敏感时期受到的干扰也最小。</p>
 
-    <h2>稳定机场四大判断标准与实测检验表</h2>
+    <h2>各品牌线路宣称与本站核验状态</h2>
+    <p>“稳定”是最难用一句宣传语证明的指标。下表把每家机场在官网上的线路宣称、本站给出的线路标签、价格核对日期和本站实测进度放在一起，让你一眼分清哪些是<strong>服务商自己说的</strong>，哪些是<strong>本站已经验证过的</strong>。实测完成后，这张表会同步更新测试日期和结论：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 14%;">品牌</th>
+            <th style="width: 44%;">官网线路宣称</th>
+            <th style="width: 14%;">线路标签</th>
+            <th style="width: 14%;">价格核对</th>
+            <th style="width: 14%;">本站实测</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stableAirports.map(a => (
+            <tr>
+              <td><strong><a href={`/reviews/${a.reviewSlug}/`}>{a.name}</a></strong></td>
+              <td style="font-size: 0.875rem;">{a.intro}</td>
+              <td>{a.tags.filter(t => lineTags.includes(t)).join(' / ') || '—'}</td>
+              <td style="white-space: nowrap;">{a.priceCheckDate ?? '—'}</td>
+              <td>{testStatusLabel[a.testStatus]}{a.testDateRange ? `（${a.testDateRange}）` : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>IPLC、IEPL、BGP 中转与直连：四种线路对比</h2>
+    <p>机场的稳定性首先取决于数据从国内到海外走的是哪条路。同样叫“专线”，IPLC 和 IEPL 的实现方式不同；没有专线的机场，也会用 BGP 中转来改善晚高峰表现。下表从原理、晚高峰表现、价格和风险四个方面对比常见的四种线路，详细原理可以看 <a href="/tutorials/iplc-iepl-difference/">IPLC 和 IEPL 的区别</a> 与 <a href="/tutorials/direct-vs-relay/">直连和中转的区别</a>：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 16%;">线路类型</th>
+            <th style="width: 28%;">基本原理</th>
+            <th style="width: 20%;">晚高峰表现</th>
+            <th style="width: 14%;">价格水平</th>
+            <th style="width: 22%;">需要注意的风险</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>IPLC 专线</strong></td><td>国际私有租用电路，点对点专用带宽，不经过公网国际出口</td><td>最平稳，延迟几乎不随时段变化</td><td>最高</td><td>真假难辨；入口机超售时仍会卡顿</td></tr>
+          <tr><td><strong>IEPL 专线</strong></td><td>以太网专线，与 IPLC 类似，组网更灵活</td><td>平稳，接近 IPLC</td><td>高</td><td>同上，需要晚高峰自测验证</td></tr>
+          <tr><td><strong>BGP 中转</strong></td><td>先连国内多线 BGP 入口，再经优化公网转发出境</td><td>较好，敏感时期可能波动</td><td>中等</td><td>出境段仍走公网，受国际出口拥堵影响</td></tr>
+          <tr><td><strong>直连</strong></td><td>本地直接连接海外服务器</td><td>波动最大，晚高峰容易降速</td><td>最低</td><td>敏感时期容易被干扰或大面积失联</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>不同用途对稳定性的要求</h2>
+    <p>不是每个人都需要最贵的专线。刷网页、查资料对偶尔的波动并不敏感，但视频会议、游戏和外贸后台对延迟和丢包要求很高。下表按常见用途列出大致的稳定性要求和建议线路，帮你判断要不要为专线多付钱：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 24%;">使用场景</th>
+            <th style="width: 20%;">延迟要求</th>
+            <th style="width: 20%;">丢包容忍度</th>
+            <th style="width: 36%;">建议线路</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>网页浏览、Google 搜索</strong></td><td>低（300ms 内可用）</td><td>较高</td><td>BGP 中转或直连即可</td></tr>
+          <tr><td><strong>ChatGPT / Claude 对话</strong></td><td>中</td><td>中</td><td>中转或专线；IP 纯净度比延迟更重要</td></tr>
+          <tr><td><strong>YouTube / Netflix 4K</strong></td><td>中</td><td>中（主要看带宽）</td><td>晚高峰带宽充足的中转或专线</td></tr>
+          <tr><td><strong>Zoom / Teams 视频会议</strong></td><td>高（150ms 内较好）</td><td>低（1% 以上明显卡顿）</td><td>IPLC / IEPL 专线</td></tr>
+          <tr><td><strong>外贸后台、PayPal、Shopify</strong></td><td>中</td><td>中</td><td>专线，并固定使用同一地区节点</td></tr>
+          <tr><td><strong>外服游戏</strong></td><td>很高（越低越好）</td><td>很低</td><td>专线且支持 UDP 转发；普通机场不一定适合，购买前向客服确认</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>稳定机场四大判断标准与自测检验表</h2>
     <p>几乎所有机场都会宣称自己“全专线直连、晚高峰不卡”，但稳定性绝不能仅凭商家的宣传口号。我们从网络架构、晚高峰抗压、延迟抖动与容灾运维四个核心维度，整理了稳定机场的硬性检验标准：</p>
     <div class="table-scroll">
       <table class="content-table">
@@ -115,6 +189,49 @@ const schema = graph(faqPage(faqs));
       </table>
     </div>
 
+    <h2>晚高峰稳定性自测记录表（照着做即可）</h2>
+    <p>买了月付之后，最可靠的判断方法是自己在晚高峰连续测几天。下表列出了建议的测试项目、所用工具、测试时间和合格参考值，你可以每天晚上照着记录一次，连续 3–5 天后就能看出这家机场在你本地宽带下是否真的稳定：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%;">测试项目</th>
+            <th style="width: 30%;">工具与方法</th>
+            <th style="width: 18%;">测试时间</th>
+            <th style="width: 30%;">合格参考值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>节点延迟</strong></td><td>客户端内置的延迟测试（Clash / 小火箭）</td><td>21:00–22:00</td><td>与白天相比上涨不超过 50%</td></tr>
+          <tr><td><strong>延迟抖动</strong></td><td>连续 Ping 同一节点 5 分钟，看数值起伏</td><td>21:00–22:00</td><td>起伏在 10ms 以内较好</td></tr>
+          <tr><td><strong>丢包率</strong></td><td>长时间 Ping 或 MTR 路由跟踪</td><td>21:00–22:00</td><td>低于 1%</td></tr>
+          <tr><td><strong>视频带宽</strong></td><td>YouTube 4K 视频，右键查看“详细统计信息”</td><td>20:30–22:30</td><td>能稳定播放 4K，拖动进度条不长时间缓冲</td></tr>
+          <tr><td><strong>AI 与流媒体可用性</strong></td><td>打开 ChatGPT、Netflix 非自制剧</td><td>任意时间</td><td>能正常登录和播放，不提示地区或代理错误</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>机场突然不稳定的常见原因与处理方法</h2>
+    <p>即使是平时很稳定的机场，也会出现某天突然变慢或全部超时的情况。很多时候问题不在机场，而在本地网络、系统时间或客户端设置。下表按现象列出常见原因和处理方法，遇到问题时可以先自己排查一遍，再联系机场客服：</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 26%;">现象</th>
+            <th style="width: 34%;">常见原因</th>
+            <th style="width: 40%;">处理方法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>所有节点都超时</strong></td><td>订阅过期、系统时间不准、本地网络限制</td><td>更新订阅并校准系统时间，详见<a href="/tutorials/node-timeout-fix/">节点超时 7 步排查</a></td></tr>
+          <tr><td><strong>只有晚上变慢</strong></td><td>公网出口拥堵或节点超售</td><td>换到人少的节点或专线节点，连续几天仍慢就考虑换机场</td></tr>
+          <tr><td><strong>订阅更新失败</strong></td><td>订阅地址被墙、链接已重置</td><td>开着代理更新，或在官网重新复制链接，详见<a href="/tutorials/update-subscription-error/">订阅更新失败</a></td></tr>
+          <tr><td><strong>能连上但打不开 ChatGPT</strong></td><td>节点 IP 被风控或地区不支持</td><td>换新加坡、日本、美国节点，详见<a href="/tutorials/chatgpt-access-denied/">ChatGPT 报错</a></td></tr>
+          <tr><td><strong>敏感时期大面积断连</strong></td><td>直连节点被干扰</td><td>优先使用专线节点，并准备一个不同机场的备用订阅</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2>关于本页稳定机场列表的说明</h2>
     <p>以下收录的品牌均在官网明确承诺提供 <strong>IPLC/IEPL 跨境专线</strong>或优质优化线路。本站正在持续跟踪各家在晚高峰时段的真实测速与丢包率数据。<strong>当前展示顺序为编辑综合推荐顺序，不代表绝对的实测排名</strong>。我们每月会核对更新各家套餐价格，实测完成后将在各品牌评测页中同步详细图表。</p>
 
@@ -125,7 +242,7 @@ const schema = graph(faqPage(faqs));
   <ComparisonTable airports={stableAirports} />
 
   <div class="prose">
-    <FaqList faqs={faqs} />
+    <FaqList faqs={faqs} title="稳定机场常见问题" intro="以下解答了关于专线、晚高峰稳定性和自测方法的常见疑问。" />
     <div style="margin-top: 2rem; padding: 1.25rem; background: var(--color-bg-alt); border-radius: var(--radius-md);">
       <p style="margin-bottom: 0.5rem;"><strong>专线品牌评测推荐：</strong><a href="/reviews/sogo/">Sogo 云评测</a> · <a href="/reviews/feimao/">飞猫云评测</a> · <a href="/reviews/guangsu/">光速云评测</a> · <a href="/reviews/quanqiu/">全球云评测</a> · <a href="/reviews/">全部品牌评测 &rarr;</a></p>
       <p style="margin-bottom: 0;"><strong>专线技术与故障排查：</strong><a href="/tutorials/iplc-iepl-difference/">IPLC 和 IEPL 专线的区别</a> · <a href="/tutorials/direct-vs-relay/">直连和中转的区别</a> · <a href="/tutorials/node-timeout-fix/">节点全部超时排查教程</a> · <a href="/compare/">机场综合对比表</a></p>
